@@ -1,0 +1,1 @@
+format currency: {{ Bakame\Laravel\Intl\IntlExtension::formatCurrency($amount, $currency, $attributes) }}

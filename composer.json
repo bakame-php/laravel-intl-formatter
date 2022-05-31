@@ -1,0 +1,59 @@
+{
+    "name": "bakame/laravel-intl-extra",
+    "description": "An intl twig extension port for laravel ecosystem",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bakame\\Laravel\\Intl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BakameTest\\Laravel\\Intl\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "illuminate/config": "^8.0 || ^9.14",
+        "illuminate/support": "^8.0 || ^9.14",
+        "twig/intl-extra": "^2.0 || ^3.4"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.7",
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.2",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "orchestra/testbench": "^7.5",
+        "nunomaduro/larastan": "^2.1"
+    },
+    "scripts": {
+        "phpcs:fix" : "php-cs-fixer fix --using-cache=no --allow-risky=yes --ansi",
+        "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes --ansi",
+        "phpstan": "phpstan analyse -c phpstan.neon --ansi --memory-limit 192M",
+        "phpunit": "XDEBUG_MODE=coverage phpunit --coverage-text",
+        "test": [
+            "@phpunit",
+            "@phpstan",
+            "@phpcs"
+        ]
+    },
+    "scripts-descriptions": {
+        "phpcs": "Runs coding style test suite",
+        "phpunit": "Runs unit and function tests",
+        "test": "Runs all tests"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Bakame\\Laravel\\Intl\\ServiceProvider"
+            ],
+            "aliases": {
+                "IntlExtension": "Bakame\\Laravel\\Intl\\IntlExtension"
+            }
+        }
+    }
+}
