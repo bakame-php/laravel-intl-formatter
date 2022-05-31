@@ -29,6 +29,19 @@ Use composer:
 composer require bakame/laravel-intl-extra
 ```
 
+Configuration
+------------
+
+In order to edit the default configuration you need to publish the package configuration to your application config directory:
+
+```bash
+php artisan vendor:publish --provider="Bakame\Laravel\Intl\Extra" --tag=config
+```
+
+The configuration file will be published to `config/bakame-intl-extra.php` in your application directory. 
+
+Please refer to the config file for an overview of the available options.
+
 Documentation
 ------------
 
