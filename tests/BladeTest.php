@@ -11,21 +11,14 @@ final class BladeTest extends TestCase
      */
     public function it_can_format_a_country_name(): void
     {
-        self::assertSame("country name: Frankrijk", $this->renderView('country_name', ['country' => 'FR', 'locale' => 'NL']));
+        self::assertSame("country name: Frankrijk", $this->renderView('country_name', ['country' => 'FR', 'locale' => 'nl-BE']));
     }
 
     /**
      * @test
      */
-    public function it_can_format_a_currency(): void
+    public function it_can_format_a_number(): void
     {
-        self::assertSame('format currency: ¥5,000,000.0000', $this->renderView('format_currency', [
-            'amount' => 5000000,
-            'currency' => 'JPY',
-            'attributes' => [
-                'rounding_mode' => 'floor',
-                'fraction_digit' => 4,
-            ],
-        ]));
+        self::assertSame('format currency: ++12,3'.PHP_EOL, $this->renderView('format_currency', ['amount' => 12.3456]));
     }
 }

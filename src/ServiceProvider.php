@@ -13,6 +13,27 @@ final class ServiceProvider extends BaseServiceProvider
     {
         parent::register();
 
-        $this->app->singleton('bakame.intl.extra', fn (): TwigIntlExtension => new TwigIntlExtension());
+        if (! defined('LARAVEL_BKM_INTL_EXTRA')) {
+            define('LARAVEL_BKM_INTL_EXTRA', realpath(__DIR__.'/../'));
+        }
+
+        $this->mergeConfigFrom(
+            LARAVEL_BKM_INTL_EXTRA.'/config/bakame-intl-extra.php',
+            'bakame-intl-extra'
+        );
+
+        $this->app->singleton(
+            'bakame.intl.factory',
+            fn ($app) =>
+             Factory::fromConfiguration(
+                 new Configuration($app->make('config')->get('bakame-intl-extra'))
+             )
+        );
+
+        $this->app->singleton(
+            'bakame.intl.extra',
+            fn (): TwigIntlExtension =>
+                $this->app->make('bakame.intl.factory')->newInstance() /* @phpstan-ignore-line */
+        );
     }
 }
