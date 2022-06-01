@@ -26,7 +26,7 @@ final class ServiceProvider extends BaseServiceProvider
             'bakame.intl.factory',
             fn ($app) =>
              Factory::fromConfiguration(
-                 new Configuration($app->make('config')->get('bakame-intl-extra'))
+                 Configuration::fromSettings($app->make('config')->get('bakame-intl-extra'))
              )
         );
 

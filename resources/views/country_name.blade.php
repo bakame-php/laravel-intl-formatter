@@ -1,1 +1,0 @@
-country name: {{ Bakame\Laravel\Intl\IntlExtension::getCountryName($country, $locale) }}

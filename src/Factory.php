@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
+use Illuminate\Support\Facades\App;
 use IntlDateFormatter;
 use NumberFormatter;
 use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
@@ -21,23 +22,25 @@ final class Factory
 
     public static function fromConfiguration(Configuration $configuration): self
     {
+        $locale = $configuration->locale ?? App::currentLocale();
+
         return new self(
             new IntlDateFormatter(
-                $configuration->locale,
+                $locale,
                 $configuration->dateType,
                 $configuration->timeType,
                 $configuration->timezone,
                 $configuration->calendar,
                 $configuration->datePattern
             ),
-            self::newNumberFormatter($configuration)
+            self::newNumberFormatter($locale, $configuration)
         );
     }
 
-    private static function newNumberFormatter(Configuration $configuration): NumberFormatter
+    private static function newNumberFormatter(string $locale, Configuration $configuration): NumberFormatter
     {
         $numberFormatter = new NumberFormatter(
-            $configuration->locale,
+            $locale,
             $configuration->style,
             $configuration->numberPattern
         );
@@ -49,6 +52,7 @@ final class Factory
         foreach ($configuration->textAttributes as $offset => $value) {
             $numberFormatter->setTextAttribute($offset, $value);
         }
+
         return $numberFormatter;
     }
 

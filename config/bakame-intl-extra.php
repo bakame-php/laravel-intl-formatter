@@ -6,14 +6,14 @@ return [
     | Default Locale
     |--------------------------------------------------------------------------
     |
-    | Locale to use when formatting or parsing or null to use the value specified in the ini setting intl.default_locale.
+    | Locale to use when formatting or parsing or null to use the value specified in Laravel app config.
     |
     | Refer to the docs for more information: https://www.php.net/manual/en/intldateformatter.create.php
     |
     | Expected: string|null
     */
 
-    'locale' => 'fr',
+    'locale' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ return [
     | Expected: string|null
     */
 
-    'dateType' => IntlDateFormatter::FULL,
+    'dateType' => IntlDateFormatter::MEDIUM,
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     | Expected: string|null
     */
 
-    'timeType' => IntlDateFormatter::FULL,
+    'timeType' => IntlDateFormatter::MEDIUM,
 
     /*
     |--------------------------------------------------------------------------
@@ -129,9 +129,7 @@ return [
     | An example of a numeric attribute is the number of integer digits the formatter will produce.
     */
 
-    'attributes' => [
-        NumberFormatter::FRACTION_DIGITS => 1,
-    ],
+    'attributes' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -145,8 +143,6 @@ return [
     | Rule-based formatters only understand NumberFormatter::DEFAULT_RULESET and NumberFormatter::PUBLIC_RULESETS.
     */
 
-    'textAttributes' => [
-        NumberFormatter::POSITIVE_PREFIX => '++',
-    ],
+    'textAttributes' => [],
 ];
 

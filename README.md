@@ -11,9 +11,10 @@ Laravel Intl Extra
 This is a Laravel centric port of the [Twig Intl Extension](https://github.com/twigphp/intl-extra) package.
 
 The package can be used in any Laravel based application to quickly handle 
-internationalization by providing a Laravel Facade to the `IntlExtension`. 
+internationalization by providing:
 
-It is also possible to use the package outside of blade templates if needed.
+- a Laravel Facade to the `IntlExtension`. 
+- helper functions to ease usage in Blade templates and Laravel applications.
 
 System Requirements
 -------
@@ -45,20 +46,31 @@ Please refer to the config file for an overview of the available options.
 Documentation
 ------------
 
-Once installed the package provides a Facade to `Twig\Extra\Intl\IntlExtension` as `Bakame\Laravel\Intl\IntlExtension` 
-to use in your Laravel based application or in blade templtes as shown below.
+Once installed the package provides a Facade `Bakame\Laravel\Intl\IntlExtension` and helper 
+global functions to use in Laravel based applications or in blade templates as shown below.
 
 ```blade
-country name: {{ Bakame\Laravel\Intl\IntlExtension::getCountryName($country, $locale) }}
+country name: {{ country_name($country, $locale) }}
 ```
 
 ```php
-$content = view($templatePath, ['country' => 'FR', 'locale' => 'NL])->render();
+$content = view($templatePath, ['country' => 'FR', 'locale' => 'NL'])->render();
 echo $content, PHP_EOL; // country name: Frankrijk
 ```
 
 Full documentation can be found on [Twig Intl Extension](https://github.com/twigphp/intl-extra) package
 
+The following helper functions exist and use the same parameters as the ones from the parent package.
+
+- country_name
+- currency_name
+- currency_symbol
+- language_name
+- locale_name
+- timezone_name
+- format_number
+- format_currency
+- country_timezones
 
 Contributing
 -------
@@ -73,7 +85,6 @@ The library:
 - has a [PHPUnit](https://phpunit.de) test suite
 - has a coding style compliance test suite using [PHP CS Fixer](https://cs.sensiolabs.org/).
 - has a code analysis compliance test suite using [PHPStan](https://github.com/phpstan/phpstan).
-- is compliant with [the language agnostic HTTP Structured Fields Test suite](https://github.com/httpwg/structured-field-tests).
 
 To run the tests, run the following command from the project folder.
 
@@ -101,8 +112,3 @@ License
 -------
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
-
-[1]: https://www.rfc-editor.org/rfc/rfc8941.html
-[2]: https://www.ietf.org/id/draft-ietf-httpbis-retrofit-00.html
-[3]: https://www.rfc-editor.org/rfc/rfc8941.html#section-3.3
-[4]: https://www.php-fig.org/psr/psr-4/

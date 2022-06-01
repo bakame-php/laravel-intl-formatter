@@ -10,24 +10,72 @@ use IntlTimeZone;
 
 final class Configuration
 {
-    public string $locale;
+    /** @readonly */
+    public ?string $locale;
+    /** @readonly */
     public int $dateType;
+    /** @readonly */
     public int $timeType;
-    /** @var IntlTimeZone|DateTimeZone|string|null */
+    /**
+     * @readonly
+     * @var IntlTimeZone|DateTimeZone|string|null
+     */
     public $timezone;
-    /** @var IntlCalendar|int|null */
+    /**
+     * @readonly
+     * @var IntlCalendar|int|null
+     */
     public $calendar;
+    /** @readonly */
     public string $datePattern;
+    /** @readonly */
     public int $style;
+    /** @readonly */
     public string $numberPattern;
-    /** @var array<int, int|float>  */
+    /**
+     * @readonly
+     * @var array<int, int|float>
+     */
     public array $attributes;
-    /** @var array<int, string>  */
+    /**
+     * @readonly
+     * @var array<int, string>
+     */
     public array $textAttributes;
 
     /**
+     * @param IntlTimeZone|DateTimeZone|string|null $timezone
+     * @param IntlCalendar|int|null                 $calendar
+     * @param array<int, int|float>                 $attributes
+     * @param array<int, string>                    $textAttributes
+     */
+    public function __construct(
+        ?string $locale,
+        int $dateType,
+        int $timeType,
+        $timezone,
+        $calendar,
+        string $datePattern,
+        int $style,
+        string $numberPattern,
+        array $attributes = [],
+        array $textAttributes = []
+    ) {
+        $this->locale = $locale;
+        $this->dateType = $dateType;
+        $this->timeType = $timeType;
+        $this->timezone = $timezone;
+        $this->calendar = $calendar;
+        $this->datePattern = $datePattern;
+        $this->style = $style;
+        $this->numberPattern = $numberPattern;
+        $this->attributes = $attributes;
+        $this->textAttributes = $textAttributes;
+    }
+
+    /**
      * @param array{
-     *     locale: string,
+     *     locale: ?string,
      *     dateType:int,
      *     timeType:int,
      *     timezone:IntlTimeZone|DateTimeZone|string|null,
@@ -39,17 +87,19 @@ final class Configuration
      *     textAttributes:array<int, string>
      * } $properties
      */
-    public function __construct(array $properties)
+    public static function fromSettings(array $properties): self
     {
-        $this->locale = $properties['locale'];
-        $this->dateType = $properties['dateType'];
-        $this->timeType = $properties['timeType'];
-        $this->timezone = $properties['timezone'];
-        $this->calendar = $properties['calendar'];
-        $this->datePattern = $properties['datePattern'];
-        $this->style = $properties['style'];
-        $this->numberPattern = $properties['numberPattern'];
-        $this->attributes = $properties['attributes'];
-        $this->textAttributes = $properties['textAttributes'];
+        return new self(
+            $properties['locale'],
+            $properties['dateType'],
+            $properties['timeType'],
+            $properties['timezone'],
+            $properties['calendar'],
+            $properties['datePattern'],
+            $properties['style'],
+            $properties['numberPattern'],
+            $properties['attributes'],
+            $properties['textAttributes'],
+        );
     }
 }
