@@ -5,12 +5,11 @@
     "autoload": {
         "psr-4": {
             "Bakame\\Laravel\\Intl\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "BakameTest\\Laravel\\Intl\\": "tests/"
-        }
+        },
+        "exclude-from-classmap": [
+            "src/**Test.php",
+            "src/Test**"
+        ]
     },
     "require": {
         "php": "^7.4 || ^8.0",

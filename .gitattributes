@@ -12,3 +12,5 @@
 /phpstan.neon       export-ignore
 /phpunit.xml        export-ignore
 /README.md          export-ignore
+/**/*Test.php       export-ignore
+/**/Test**          export-ignore

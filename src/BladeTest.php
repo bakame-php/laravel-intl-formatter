@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BakameTest\Laravel\Intl;
+namespace Bakame\Laravel\Intl;
 
 final class BladeTest extends TestCase
 {
@@ -11,7 +11,7 @@ final class BladeTest extends TestCase
      */
     public function it_can_format_a_country_name(): void
     {
-        self::assertSame("country name: Frankrijk", $this->renderView('country_name', ['country' => 'FR', 'locale' => 'nl-BE']));
+        self::assertSame('country name: Frankrijk', $this->renderView('country_name', ['country' => 'FR', 'locale' => 'nl-BE']));
     }
 
     /**

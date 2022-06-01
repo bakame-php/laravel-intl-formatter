@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace BakameTest\Laravel\Intl;
+namespace Bakame\Laravel\Intl;
 
-use Bakame\Laravel\Intl\ServiceProvider;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Foundation\Application;
@@ -26,7 +25,7 @@ class TestCase extends LaravelTestCase
      */
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('view.paths', [__DIR__ . '/../resources/views']);
+        $app['config']->set('view.paths', [__DIR__.'/../resources/views']);
     }
 
     /**
