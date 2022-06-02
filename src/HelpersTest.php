@@ -118,11 +118,14 @@ EXPECTED;
         $content = $this->renderView('format_currency');
         $expected = <<<EXPECTED
 €1,000,000.00
+1.000.000,00 €
 €1,000,000.00
 €12.34
+YEN 125,000.00
 EXPECTED;
+        //dd($content, $expected);
         foreach (explode(PHP_EOL, $expected) as $expectedLine) {
-            self::assertStringContainsStringIgnoringCase($expectedLine, $content);
+            self::assertStringContainsString($expectedLine, $content);
         }
     }
 
