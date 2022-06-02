@@ -88,16 +88,28 @@ final class Formatter
     ];
 
     private IntlDateFormatter $dateFormatterPrototype;
+    /** @var array<IntlDateFormatter> */
+    private array $dateFormatters = [];
+    /** @var array<NumberFormatter> */
+    private array $numberFormatters = [];
 
     public function __construct(IntlDateFormatter $dateFormatterPrototype)
     {
         $this->dateFormatterPrototype = $dateFormatterPrototype;
     }
 
-    public static function fromEnvironment(): Formatter
+    public static function fromEnvironment(string $dateFormat = 'medium', string $timeFormat = 'medium'): Formatter
     {
+        if (!isset(self::DATE_FORMATS[$dateFormat])) {
+            throw new FormatterError(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+        }
+
+        if (!isset(self::DATE_FORMATS[$timeFormat])) {
+            throw new FormatterError(sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+        }
+
         return new Formatter(
-            new IntlDateFormatter(Locale::getDefault(), IntlDateFormatter::MEDIUM, IntlDateFormatter::MEDIUM)
+            new IntlDateFormatter(Locale::getDefault(), self::DATE_FORMATS[$dateFormat], self::DATE_FORMATS[$timeFormat])
         );
     }
 
@@ -282,7 +294,6 @@ final class Formatter
             return new DateTime('now', false !== $timezone ? $timezone : Carbon::now()->getTimezone());
         }
 
-
         if (ctype_digit($asString) || ('' !== $asString && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
             $date = new DateTime('@'.$asString);
             $date->setTimezone(false !== $timezone ? $timezone : Carbon::now()->getTimezone());
@@ -325,9 +336,14 @@ final class Formatter
         $calendar = 'gregorian' === $calendar ? IntlDateFormatter::GREGORIAN : IntlDateFormatter::TRADITIONAL;
         $dateFormatValue = self::DATE_FORMATS[$dateFormat] ?? $this->dateFormatterPrototype->getDateType();
         $timeFormatValue = self::DATE_FORMATS[$timeFormat] ?? $this->dateFormatterPrototype->getTimeType();
-        $pattern = null !== $pattern ? $pattern : $this->dateFormatterPrototype->getPattern();
+        $pattern = $pattern ?? $this->dateFormatterPrototype->getPattern();
 
-        return new IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
+        $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
+        if (!isset($this->dateFormatters[$hash])) {
+            $this->dateFormatters[$hash] = new IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
+        }
+
+        return $this->dateFormatters[$hash];
     }
 
     /**
@@ -343,10 +359,15 @@ final class Formatter
 
         ksort($attrs);
 
-        $newNumberFormatter = new NumberFormatter($locale, self::NUMBER_STYLES[$style]);
-        $this->setNumberFormatterAttributes($newNumberFormatter, $attrs);
+        $hash = $locale.'|'.$style.'|'.json_encode($attrs);
+        if (!isset($this->numberFormatters[$hash])) {
+            $newNumberFormatter = new NumberFormatter($locale, self::NUMBER_STYLES[$style]);
+            $this->setNumberFormatterAttributes($newNumberFormatter, $attrs);
 
-        return $newNumberFormatter;
+            $this->numberFormatters[$hash] = $newNumberFormatter;
+        }
+
+        return $this->numberFormatters[$hash];
     }
 
     /**
