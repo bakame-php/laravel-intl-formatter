@@ -52,7 +52,7 @@
         },
         "laravel": {
             "providers": [
-                "Bakame\\Laravel\\Intl\\ServiceProvider"
+                "Provider"
             ],
             "aliases": {
                 "IntlExtension": "Bakame\\Laravel\\Intl\\IntlExtension"

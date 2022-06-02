@@ -65,7 +65,7 @@ final class BladeTest extends LaravelTestCase
     protected function getPackageProviders($app): array
     {
         return [
-            ServiceProvider::class,
+            Provider::class,
         ];
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use Twig\Extra\Intl\IntlExtension as TwigIntlExtension;
 
-final class ServiceProvider extends BaseServiceProvider
+final class Provider extends ServiceProvider
 {
     public function register(): void
     {
@@ -24,7 +24,7 @@ final class ServiceProvider extends BaseServiceProvider
 
         $this->app->singleton(
             'bakame.intl.factory',
-            fn ($app) =>
+            fn ($app): Factory =>
              Factory::fromConfiguration(
                  Configuration::fromSettings($app->make('config')->get('bakame-intl-extra'))
              )
@@ -32,8 +32,12 @@ final class ServiceProvider extends BaseServiceProvider
 
         $this->app->singleton(
             'bakame.intl.extra',
-            fn (): TwigIntlExtension =>
-                $this->app->make('bakame.intl.factory')->newInstance() /* @phpstan-ignore-line */
+            function (): TwigIntlExtension {
+                /** @var Factory $factory */
+                $factory = $this->app->make('bakame.intl.factory');
+
+                return $factory->newInstance();
+            }
         );
     }
 }
