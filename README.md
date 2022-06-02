@@ -13,13 +13,14 @@ This is a Laravel centric port of the [Twig Intl Extension](https://github.com/t
 The package can be used in any Laravel based application to quickly handle 
 internationalization by providing:
 
-- a Laravel Facade to the `IntlExtension`. 
-- helper functions to ease usage in Blade templates and Laravel applications.
+- a `Formatter` class and its facade `FormatterFacade`
+- helper functions to ease usage in Blade templates and Laravel application codebase.
 
 System Requirements
 -------
 
-- Laravel 8 and 9 and the same requirement as its [parent package](https://github.com/twigphp/intl-extra)
+- Laravel 8 and/or 9
+- Symfony Intl component
 
 Installation
 ------------
@@ -29,19 +30,6 @@ Use composer:
 ```
 composer require bakame/laravel-intl-extra
 ```
-
-Configuration
-------------
-
-In order to edit the default configuration you need to publish the package configuration to your application config directory:
-
-```bash
-php artisan vendor:publish --provider="Bakame\Laravel\Intl\Extra" --tag=config
-```
-
-The configuration file will be published to `config/bakame-intl-extra.php` in your application directory. 
-
-Please refer to the config file for an overview of the available options.
 
 Documentation
 ------------
@@ -58,19 +46,41 @@ $content = view($templatePath, ['country' => 'FR', 'locale' => 'NL'])->render();
 echo $content, PHP_EOL; // country name: Frankrijk
 ```
 
-Full documentation can be found on [Twig Intl Extension](https://github.com/twigphp/intl-extra) package
-
 The following helper functions exist and use the same parameters as the ones from the parent package.
 
-- country_name
-- currency_name
-- currency_symbol
-- language_name
-- locale_name
-- timezone_name
-- format_number
-- format_currency
-- country_timezones
+- `country_name`: returns the country name given its two-letter/five-letter code;
+- `currency_name`: returns the currency name given its three-letter code;
+- `currency_symbol`: returns the currency symbol given its three-letter code;
+- `language_name`: returns the language name given its two-letter/five-letter code;
+- `locale_name`: returns the language name given its two-letter/five-letter code;
+- `timezone_name`: returns the timezone name given its identifier;
+- `country_timezones`: returns the timezone identifiers of the given country code;
+- `format_currency`: formats a number as a currency;
+- `format_number`: formats a number;
+- `format_datetime`: formats a date time;
+- `format_date`: formats a date;
+- `format_time`: formats a time;
+
+Each function uses the same arguments in the same order as the Twig Extra package filters/functions.
+
+If you are using a Laravel application in PHP8+, you can use named parameters to improve functions
+usage.
+
+**In PHP7.4**
+
+```php 
+<?php
+
+echo format_datetime('2019-08-07 23:39:12', 'mediun', 'medium', '', null, 'gregorian', 'fr');
+```
+
+**In PHP8+**
+
+```php 
+<?php
+
+echo format_datetime(date: '2019-08-07 23:39:12', locale: 'fr');
+```
 
 Contributing
 -------

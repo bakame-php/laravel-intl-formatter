@@ -15,24 +15,25 @@
         ]
     },
     "require": {
+        "ext-intl": "*",
+        "ext-json": "*",
         "php": "^7.4 || ^8.0",
-        "illuminate/config": "^8.0 || ^9.14",
-        "illuminate/support": "^8.0 || ^9.14",
-        "twig/intl-extra": "^2.0 || ^3.4",
-        "ext-intl": "*"
+        "illuminate/config": "^8.0 || ^9.0",
+        "illuminate/support": "^8.0 || ^9.0",
+        "symfony/intl": "^4.4||^5.0||^6.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "nunomaduro/larastan": "^1.0.0 || ^2.1",
+        "orchestra/testbench": "^6.6.0 || ^7.5",
         "phpstan/phpstan": "^1.7",
-        "phpunit/phpunit": "^9.5",
         "phpstan/phpstan-phpunit": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.2",
-        "friendsofphp/php-cs-fixer": "^3.8",
-        "orchestra/testbench": "^6.6.0 || ^7.5",
-        "nunomaduro/larastan": "^1.0.0 || ^2.1"
+        "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "phpcs:fix" : "php-cs-fixer fix --using-cache=no --allow-risky=yes --ansi",
-        "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes --ansi",
+        "phpcs:fix" : "php-cs-fixer fix -vvv --using-cache=no --allow-risky=yes --ansi",
+        "phpcs": "php-cs-fixer fix -vvv --diff --dry-run --allow-risky=yes --ansi",
         "phpstan": "phpstan analyse -c phpstan.neon --ansi --memory-limit 192M",
         "phpunit": "XDEBUG_MODE=coverage phpunit --coverage-text",
         "test": [
@@ -43,6 +44,7 @@
     },
     "scripts-descriptions": {
         "phpcs": "Runs coding style test suite",
+        "phpstan": "Runs complete codebase static analysis",
         "phpunit": "Runs unit and function tests",
         "test": "Runs all tests"
     },
@@ -55,8 +57,11 @@
                 "Provider"
             ],
             "aliases": {
-                "IntlExtension": "Bakame\\Laravel\\Intl\\IntlExtension"
+                "Formatter": "FormatterFacade"
             }
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
