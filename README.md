@@ -44,31 +44,207 @@ Please refer to the config file for an overview of the available options.
 Documentation
 ------------
 
-Once installed the package provides global helper functions to use as shown below.
+Once installed the package provides the following global helper functions:
+
+### Country Name
+
+Returns the country name given its two-letter/five-letter code;
 
 ```blade
 country name: {{ country_name($country, $locale) }}
 ```
 
 ```php
-$content = view($templatePath, ['country' => 'FR', 'locale' => 'NL'])->render();
-echo $content, PHP_EOL; // country name: Frankrijk
+echo view($templatePath, ['country' => 'FR', 'locale' => 'NL'])->render();
+// country name: Frankrijk
 ```
 
-The following helper functions exist and use the same parameters as the ones from the parent package.
+### Currency Name
 
-- `country_name`: returns the country name given its two-letter/five-letter code;
-- `currency_name`: returns the currency name given its three-letter code;
-- `currency_symbol`: returns the currency symbol given its three-letter code;
-- `language_name`: returns the language name given its two-letter/five-letter code;
-- `locale_name`: returns the language name given its two-letter/five-letter code;
-- `timezone_name`: returns the timezone name given its identifier;
-- `country_timezones`: returns the timezone identifiers of the given country code;
-- `format_currency`: formats a number as a currency;
-- `format_number`: formats a number;
-- `format_datetime`: formats a date time;
-- `format_date`: formats a date;
-- `format_time`: formats a time;
+Returns the currency name given its three-letter code;
+
+```blade
+currency name: {{ currency_name($currency, $locale) }}
+```
+
+```php
+echo view($templatePath, ['currency' => 'JPY', 'locale' => 'PT'])->render();
+// currency name: Iene japonês
+```
+
+### Currency Symbol
+
+Returns the currency symbol given its three-letter code;
+
+```blade
+currency symbol: {{ currency_symbol($currency, $locale) }}
+```
+
+```php
+echo view($templatePath, ['currency' => 'JPY', 'locale' => 'PT'])->render();
+// currency symbol: JP¥
+```
+
+### Language name
+
+Returns the currency symbol given its three-letter code;
+
+```blade
+language name: {{ language_name($language, $locale) }}
+```
+
+```php
+echo view($templatePath, ['language' => 'it', 'locale' => 'nl'])->render();
+// language name: Italiaans
+```
+
+### Locale name
+
+Returns the currency symbol given its three-letter code;
+
+```blade
+locale name: {{ locale_name($data, $locale) }}
+```
+
+```php
+echo view($templatePath, ['data' => 'sw', 'locale' => 'nl'])->render();
+// locale name: Swahili
+```
+
+### Timezone name
+
+Returns the timezone name given its identifier;
+
+```blade
+timezone name: {{ locale_name($data, $locale) }}
+```
+
+```php
+echo view($templatePath, ['timezone' => 'Asia/Tokyo', 'locale' => 'es'])->render();
+// timezone name: hora de Japón (Tokio)
+```
+
+### Country Timezones
+
+Returns the timezone identifiers of the given country code;
+
+```blade
+country timezones: {{ implde(", ", country_timezones($country)) }}
+```
+
+```php
+$content = view($templatePath, ['country' => 'CD', 'locale' => 'es'])->render();
+echo $content, PHP_EOL; // country timezones: Africa/Kinshasa, Africa/Lubumbashi
+```
+
+### Format Currency
+
+Formats a number as a currency;
+
+```blade
+format currency: {{ format_currency($amount, $currency, $attrs, $locale) }}
+```
+
+```php
+$templateData = [
+    'amount' => 100.356, 
+    'currency' => 'USD', 
+    'locale' => 'ES', 
+    'attrs' => [
+        'fraction_digit' => 1,
+        'rounding_mode' => 'floor',
+    ]
+];
+echo view($templatePath, $templateData)->render();
+// format currency: 100,3 US$
+```
+
+### Format Number
+
+Formats a number;
+
+```blade
+format number: {{ format_number($number, $attrs, $locale) }}
+```
+
+```php
+$templateData = [
+    'number' => 100.356, 
+    'locale' => 'nl', 
+    'style' => 'spellout',
+    'type' => 'double',
+    'attrs' => [
+        'fraction_digit' => 1,
+        'rounding_mode' => 'floor',
+    ]
+];
+echo view($templatePath, $templateData)->render();
+// format number: honderd komma drie
+```
+
+### Format DateTime
+
+Formats a date and time;
+
+```blade
+format datetime: {{ format_datetime($date, $dateFormat, $timeFormat, $pattern, $timezone, $calendar, $locale) }}
+```
+
+```php
+$templateData = [
+    'date' => 'yesterday', 
+    'dateFormat' => 'full', 
+    'timeFormat' => 'full', 
+    'pattern' => '' ,
+    'timezone' => 'Africa/Lubumbashi', 
+    'calendar' => 'gregorian' ,
+    'locale' => 'sw',
+];
+echo view($templatePath, $templateData)->render();
+// format datetime: Alhamisi, 2 Juni 2022 00:00:00 Saa za Afrika ya Kati
+```
+
+### Format Date
+
+Formats a the date portion of a datetime;
+
+```blade
+format date: {{ format_date($date, $dateFormat, $pattern, $timezone, $calendar, $locale) }}
+```
+
+```php
+$templateData = [
+    'date' => 'yesterday', 
+    'dateFormat' => 'long', 
+    'pattern' => '' ,
+    'timezone' => 'Africa/Lubumbashi', 
+    'calendar' => 'gregorian' ,
+    'locale' => 'sw',
+];
+echo view($templatePath, $templateData)->render();
+// format date: 2 Juni 2022
+```
+
+### Format Time
+
+Formats the time portion of a datetime;
+
+```blade
+format time: {{ format_time($date, $timeFormat, $pattern, $timezone, $calendar, $locale) }}
+```
+
+```php
+$templateData = [
+    'date' => 'yesterday', 
+    'dateFormat' => 'full', 
+    'pattern' => '' ,
+    'timezone' => 'Africa/Lubumbashi', 
+    'calendar' => 'gregorian' ,
+    'locale' => 'sw',
+];
+echo view($templatePath, $templateData)->render();
+// format time: 00:00:00 Saa za Afrika ya Kati
+```
 
 Each function uses the same arguments in the same order as the Twig Extra package filters/functions.
 
