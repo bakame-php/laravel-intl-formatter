@@ -11,9 +11,9 @@ final class Configuration
     /** @readonly */
     public int $timeType;
     /** @readonly */
-    public string $datePattern;
-    /** @readonly */
     public int $style;
+    /** @readonly */
+    public string $datePattern;
     /** @readonly */
     public string $numberPattern;
     /**
@@ -40,12 +40,12 @@ final class Configuration
     public function __construct(
         int $dateType,
         int $timeType,
-        string $datePattern,
         int $style,
-        string $numberPattern,
-        array $attributes,
-        array $textAttributes,
-        array $symbolAttributes
+        string $datePattern = '',
+        string $numberPattern = '',
+        array $attributes = [],
+        array $textAttributes = [],
+        array $symbolAttributes = []
     ) {
         $this->dateType = $dateType;
         $this->timeType = $timeType;
@@ -78,8 +78,8 @@ final class Configuration
         return new self(
             $settings['date']['dateType'],
             $settings['date']['timeType'],
-            $settings['date']['pattern'],
             $settings['number']['style'],
+            $settings['date']['pattern'],
             $settings['number']['pattern'],
             $settings['number']['attributes'],
             $settings['number']['textAttributes'],

@@ -224,8 +224,13 @@ final class Formatter
      * @param int|float $number
      * @param array<string, int|float|string> $attrs
      */
-    public function formatNumber($number, array $attrs = [], string $style = 'decimal', string $type = 'default', string $locale = null): string
-    {
+    public function formatNumber(
+        $number,
+        array $attrs = [],
+        string $style = 'decimal',
+        string $type = 'default',
+        string $locale = null
+    ): string {
         if (!isset(self::NUMBER_TYPES[$type])) {
             throw new FailedFormatting(sprintf('The type "%s" does not exist, known types are: "%s".', $type, implode('", "', array_keys(self::NUMBER_TYPES))));
         }
@@ -239,13 +244,20 @@ final class Formatter
     }
 
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      *
      * @throws FailedFormatting
      */
-    public function formatDateTime($date, ?string $dateFormat = 'medium', ?string $timeFormat = 'medium', ?string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
-    {
+    public function formatDateTime(
+        $date,
+        ?string $dateFormat = 'medium',
+        ?string $timeFormat = 'medium',
+        ?string $pattern = '',
+        $timezone = null,
+        string $calendar = 'gregorian',
+        string $locale = null
+    ): string {
         try {
             $date = $this->convertDate($date, $timezone);
         } catch (Exception $exception) {
@@ -307,25 +319,43 @@ final class Formatter
     }
 
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      */
-    public function formatDate($date, ?string $dateFormat = 'medium', ?string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
-    {
+    public function formatDate(
+        $date,
+        ?string $dateFormat = 'medium',
+        ?string $pattern = '',
+        $timezone = null,
+        string $calendar = 'gregorian',
+        string $locale = null
+    ): string {
         return $this->formatDateTime($date, $dateFormat, 'none', $pattern, $timezone, $calendar, $locale);
     }
 
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
      */
-    public function formatTime($date, ?string $timeFormat = 'medium', ?string $pattern = '', $timezone = null, string $calendar = 'gregorian', string $locale = null): string
-    {
+    public function formatTime(
+        $date,
+        ?string $timeFormat = 'medium',
+        ?string $pattern = '',
+        $timezone = null,
+        string $calendar = 'gregorian',
+        string $locale = null
+    ): string {
         return $this->formatDateTime($date, 'none', $timeFormat, $pattern, $timezone, $calendar, $locale);
     }
 
-    private function createDateFormatter(?string $locale, ?string $dateFormat, ?string $timeFormat, ?string $pattern, DateTimeZone $timezone, string $calendar): IntlDateFormatter
-    {
+    private function createDateFormatter(
+        ?string $locale,
+        ?string $dateFormat,
+        ?string $timeFormat,
+        ?string $pattern,
+        DateTimeZone $timezone,
+        string $calendar
+    ): IntlDateFormatter {
         if (null !== $dateFormat && !isset(self::DATE_FORMATS[$dateFormat])) {
             throw new FailedFormatting(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys(self::DATE_FORMATS))));
         }
@@ -363,8 +393,8 @@ final class Formatter
         $hash = $locale.'|'.$style.'|'.json_encode($attrs);
         if (!isset($this->numberFormatters[$hash])) {
             $newNumberFormatter = new NumberFormatter($locale, self::NUMBER_STYLES[$style]);
-            $this->setNumberFormatterAttributes($newNumberFormatter, $attrs);
             $this->addDefaultAttributes($newNumberFormatter);
+            $this->setNumberFormatterAttributes($newNumberFormatter, $attrs);
             $this->numberFormatters[$hash] = $newNumberFormatter;
         }
 
@@ -405,6 +435,10 @@ final class Formatter
 
     private function addDefaultAttributes(NumberFormatter $numberFormatter): void
     {
+        foreach ($this->configuration->attributes as $attribute => $value) {
+            $numberFormatter->setAttribute($attribute, $value);
+        }
+
         foreach ($this->configuration->textAttributes as $attribute => $value) {
             $numberFormatter->setTextAttribute($attribute, $value);
         }
