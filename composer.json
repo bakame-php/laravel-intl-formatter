@@ -40,7 +40,8 @@
         "php": "^7.4 || ^8.0",
         "illuminate/config": "^8.0 || ^9.0",
         "illuminate/support": "^8.0 || ^9.0",
-        "symfony/intl": "^5.0||^6.0"
+        "symfony/intl": "^5.0||^6.0",
+        "ext-intl": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",

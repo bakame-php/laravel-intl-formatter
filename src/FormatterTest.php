@@ -22,11 +22,14 @@ final class FormatterTest extends TestCase
     {
         parent::setUp();
 
-        $this->formatter = Formatter::fromConfiguration(new Configuration(
-            IntlDateFormatter::FULL,
-            IntlDateFormatter::FULL,
-            NumberFormatter::DECIMAL
-        ));
+        $this->formatter = Formatter::fromApplication(
+            new Configuration(
+                IntlDateFormatter::FULL,
+                IntlDateFormatter::FULL,
+                NumberFormatter::DECIMAL
+            ),
+            new CarbonDateResolver()
+        );
     }
 
     /** @test */
@@ -45,7 +48,8 @@ final class FormatterTest extends TestCase
 
         $formatter = new Formatter(
             new IntlDateFormatter('fr', IntlDateFormatter::FULL, IntlDateFormatter::FULL),
-            $configuration
+            $configuration,
+            new CarbonDateResolver()
         );
 
         self::assertSame('++12x3', $formatter->formatNumber(12.3456, ['padding_position' => 'after_prefix'], 'decimal', 'default', 'fr'));
@@ -66,6 +70,11 @@ final class FormatterTest extends TestCase
         self::assertSame(
             $this->formatter->formatDate($dateString, 'short', null, 'Africa/Kinshasa'),
             $this->formatter->formatDate($dateString, 'short', null, new DateTimeZone('Africa/Kinshasa'))
+        );
+
+        self::assertNotSame(
+            $this->formatter->formatDate($dateString, 'short', null, 'Africa/Kinshasa'),
+            $this->formatter->formatDate($dateString, 'short', null, false)
         );
     }
 

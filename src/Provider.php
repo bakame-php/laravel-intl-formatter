@@ -12,21 +12,18 @@ final class Provider extends ServiceProvider
     {
         parent::register();
 
-        if (! defined('LARAVEL_BKM_INTL_FORMATTER')) {
-            define('LARAVEL_BKM_INTL_FORMATTER', realpath(__DIR__.'/../'));
+        if (! defined('BKM_INTL_FORMATTER')) {
+            define('BKM_INTL_FORMATTER', realpath(__DIR__.'/../'));
         }
 
-        $this->mergeConfigFrom(
-            LARAVEL_BKM_INTL_FORMATTER.'/config/bakame-intl-formatter.php',
-            'bakame-intl-formatter'
-        );
-
-        $this->app->singleton(
-            'bakame.intl.formatter',
-            fn ($app): Formatter =>
-            Formatter::fromConfiguration(
-                Configuration::fromApplication($app->make('config')->get('bakame-intl-formatter'))
-            )
-        );
+        $this->mergeConfigFrom(BKM_INTL_FORMATTER.'/config/bakame-intl-formatter.php', 'bakame.intl.formatter.settings');
+        $this->app->singleton('bakame.date.resolver', fn (): DateResolver => new CarbonDateResolver());
+        $this->app->singleton('bakame.intl.formatter.config', fn ($app): Configuration => Configuration::fromApplication(
+            $app->make('config')->get('bakame.intl.formatter.settings')
+        ));
+        $this->app->singleton('bakame.intl.formatter', fn ($app): Formatter => Formatter::fromApplication(
+            $app->make('bakame.intl.formatter.config'),
+            $app->make('bakame.date.resolver')
+        ));
     }
 }

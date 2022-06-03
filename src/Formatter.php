@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
-use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
-use Illuminate\Support\Carbon;
 use IntlDateFormatter;
 use Locale;
 use NumberFormatter;
@@ -89,18 +86,23 @@ final class Formatter
 
     private IntlDateFormatter $dateFormatterPrototype;
     private Configuration $configuration;
+    private DateResolver $dateResolver;
     /** @var array<IntlDateFormatter> */
     private array $dateFormatters = [];
     /** @var array<NumberFormatter> */
     private array $numberFormatters = [];
 
-    public function __construct(IntlDateFormatter $dateFormatterPrototype, Configuration $configuration)
-    {
+    public function __construct(
+        IntlDateFormatter $dateFormatterPrototype,
+        Configuration $configuration,
+        DateResolver $dateResolver
+    ) {
         $this->dateFormatterPrototype = $dateFormatterPrototype;
         $this->configuration = $configuration;
+        $this->dateResolver = $dateResolver;
     }
 
-    public static function fromConfiguration(Configuration $configuration): self
+    public static function fromApplication(Configuration $configuration, DateResolver $dateResolver): self
     {
         return new self(
             new IntlDateFormatter(
@@ -111,7 +113,8 @@ final class Formatter
                 null,
                 $configuration->datePattern
             ),
-            $configuration
+            $configuration,
+            $dateResolver
         );
     }
 
@@ -262,7 +265,7 @@ final class Formatter
         string $locale = null
     ): string {
         try {
-            $date = $this->convertDate($date, $timezone);
+            $date = $this->dateResolver->resolve($date, $timezone);
         } catch (Exception $exception) {
             throw FailedFormatting::dueToInvalidDate($exception);
         }
@@ -275,52 +278,6 @@ final class Formatter
         }
 
         return $ret;
-    }
-
-    /**
-     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
-     * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
-     *
-     * @throws Exception
-     */
-    private function convertDate($date, $timezone): DateTimeInterface
-    {
-        // determine the timezone
-        if (false !== $timezone) {
-            if (null === $timezone) {
-                $timezone = Carbon::now()->getTimezone();
-            } elseif (!$timezone instanceof DateTimeZone) {
-                $timezone = new DateTimeZone($timezone);
-            }
-        }
-
-        // immutable dates
-        if ($date instanceof DateTimeImmutable) {
-            return false !== $timezone ? $date->setTimezone($timezone) : $date;
-        }
-
-        if ($date instanceof DateTimeInterface) {
-            $date = clone $date;
-            if (false !== $timezone) {
-                $date->setTimezone($timezone);
-            }
-
-            return $date;
-        }
-
-        $asString = (string) $date;
-        if (null === $date || 'now' === strtolower($asString)) {
-            return new DateTime('now', false !== $timezone ? $timezone : Carbon::now()->getTimezone());
-        }
-
-        if (ctype_digit($asString) || ('' !== $asString && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
-            $date = new DateTime('@'.$asString);
-            $date->setTimezone(false !== $timezone ? $timezone : Carbon::now()->getTimezone());
-
-            return $date;
-        }
-
-        return new DateTime($asString, false !== $timezone ? $timezone : Carbon::now()->getTimezone());
     }
 
     /**
