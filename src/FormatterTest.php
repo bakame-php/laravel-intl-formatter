@@ -40,6 +40,7 @@ final class FormatterTest extends TestCase
             '',
             [NumberFormatter::FRACTION_DIGITS => 1],
             [NumberFormatter::POSITIVE_PREFIX => '++'],
+            [NumberFormatter::DECIMAL_SEPARATOR_SYMBOL => 'x'],
         );
 
         $formatter = new Formatter(
@@ -47,7 +48,7 @@ final class FormatterTest extends TestCase
             $configuration
         );
 
-        self::assertSame('++12,3', $formatter->formatNumber(12.3456, [], 'decimal', 'default', 'fr'));
+        self::assertSame('++12x3', $formatter->formatNumber(12.3456, ['padding_position' => 'after_prefix'], 'decimal', 'default', 'fr'));
     }
 
     /** @test */

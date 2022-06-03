@@ -212,9 +212,10 @@ final class Formatter
     public function formatCurrency($amount, string $currency, array $attrs = [], string $locale = null): string
     {
         $formatter = $this->createNumberFormatter($locale, 'currency', $attrs);
-
         if (false === $ret = $formatter->formatCurrency($amount, $currency)) {
-            throw new FailedFormatting('Unable to format the given number as a currency.');
+            // @codeCoverageIgnoreStart
+            throw FailedFormatting::dueToNumberFormatter('Unable to format the given number as a currency.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $ret;
@@ -232,12 +233,14 @@ final class Formatter
         string $locale = null
     ): string {
         if (!isset(self::NUMBER_TYPES[$type])) {
-            throw new FailedFormatting(sprintf('The type "%s" does not exist, known types are: "%s".', $type, implode('", "', array_keys(self::NUMBER_TYPES))));
+            throw FailedFormatting::dueToUnknownNumberType($type, self::NUMBER_TYPES);
         }
 
         $formatter = $this->createNumberFormatter($locale, $style, $attrs);
         if (false === $ret = $formatter->format($number, self::NUMBER_TYPES[$type])) {
-            throw new FailedFormatting('Unable to format the given number.');
+            // @codeCoverageIgnoreStart
+            throw FailedFormatting::dueToNumberFormatter('Unable to format the given number.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $ret;
@@ -261,12 +264,14 @@ final class Formatter
         try {
             $date = $this->convertDate($date, $timezone);
         } catch (Exception $exception) {
-            throw new FailedFormatting('Unable to format the given date.', 0, $exception);
+            throw FailedFormatting::dueToInvalidDate($exception);
         }
 
         $formatter = $this->createDateFormatter($locale, $dateFormat, $timeFormat, $pattern, $date->getTimezone(), $calendar);
         if (false === $ret = $formatter->format($date)) {
-            throw new FailedFormatting('Unable to format the given date.');
+            // @codeCoverageIgnoreStart
+            throw FailedFormatting::dueToDateFormatter('Unable to format the given date.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $ret;
@@ -357,11 +362,11 @@ final class Formatter
         string $calendar
     ): IntlDateFormatter {
         if (null !== $dateFormat && !isset(self::DATE_FORMATS[$dateFormat])) {
-            throw new FailedFormatting(sprintf('The date format "%s" does not exist, known formats are: "%s".', $dateFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+            throw FailedFormatting::dueToUnknownDateFormat($dateFormat, self::DATE_FORMATS);
         }
 
         if (null !== $timeFormat && !isset(self::DATE_FORMATS[$timeFormat])) {
-            throw new FailedFormatting(sprintf('The time format "%s" does not exist, known formats are: "%s".', $timeFormat, implode('", "', array_keys(self::DATE_FORMATS))));
+            throw FailedFormatting::dueToUnknownTimeFormat($timeFormat, self::DATE_FORMATS);
         }
 
         $locale = $locale ?? Locale::getDefault();
@@ -384,7 +389,7 @@ final class Formatter
     private function createNumberFormatter(?string $locale, string $style, array $attrs = []): NumberFormatter
     {
         if (!isset(self::NUMBER_STYLES[$style])) {
-            throw new FailedFormatting(sprintf('The style "%s" does not exist, known styles are: "%s".', $style, implode('", "', array_keys(self::NUMBER_STYLES))));
+            throw FailedFormatting::dueToUnknownStyle($style, self::NUMBER_STYLES);
         }
 
         $locale = $locale ?? Locale::getDefault();
@@ -408,25 +413,25 @@ final class Formatter
     {
         foreach ($attrs as $name => $value) {
             if (!isset(self::NUMBER_ATTRIBUTES[$name])) {
-                throw new FailedFormatting(sprintf('The number formatter attribute "%s" does not exist, known attributes are: "%s".', $name, implode('", "', array_keys(self::NUMBER_ATTRIBUTES))));
+                throw FailedFormatting::dueToUnknownNumberFormatterAttributeName($name, self::NUMBER_ATTRIBUTES);
             }
 
             if ('rounding_mode' === $name) {
                 if (!isset(self::NUMBER_ROUNDING_ATTRIBUTES[$value])) {
-                    throw new FailedFormatting(sprintf('The number formatter rounding mode "%s" does not exist, known modes are: "%s".', $value, implode('", "', array_keys(self::NUMBER_ROUNDING_ATTRIBUTES))));
+                    throw FailedFormatting::dueToUnknownNumberFormatterRoundingMode($value, self::NUMBER_ROUNDING_ATTRIBUTES);
                 }
 
                 $value = self::NUMBER_ROUNDING_ATTRIBUTES[$value];
             } elseif ('padding_position' === $name) {
                 if (!isset(self::NUMBER_PADDING_ATTRIBUTES[$value])) {
-                    throw new FailedFormatting(sprintf('The number formatter padding position "%s" does not exist, known positions are: "%s".', $value, implode('", "', array_keys(self::NUMBER_PADDING_ATTRIBUTES))));
+                    throw FailedFormatting::dueToUnknownNumberFormatterPaddingPosition($value, self::NUMBER_PADDING_ATTRIBUTES);
                 }
 
                 $value = self::NUMBER_PADDING_ATTRIBUTES[$value];
             }
 
             if (is_string($value)) {
-                throw new FailedFormatting(sprintf('The number formatter value for "%s" can not be a string: "%s', $name, $value));
+                throw FailedFormatting::dueToInvalidNumberFormatterAttributeValue($name, $value);
             }
 
             $numberFormatter->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
