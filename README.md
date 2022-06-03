@@ -1,4 +1,4 @@
-Laravel Intl Extra
+Laravel Intl Formatter
 =======================================
 
 [![Author](http://img.shields.io/badge/author-@nyamsprod-blue.svg?style=flat-square)](https://twitter.com/nyamsprod)
@@ -8,10 +8,10 @@ Laravel Intl Extra
 [![Total Downloads](https://img.shields.io/packagist/dt/bakame/laravel-intl-extra.svg?style=flat-square)](https://packagist.org/packages/bakame/laravel-intl-extra)
 [![Sponsor development of this project](https://img.shields.io/badge/sponsor%20this%20package-%E2%9D%A4-ff69b4.svg?style=flat-square)](https://github.com/sponsors/nyamsprod)
 
-This is a Laravel centric port of the [Twig Intl Extension](https://github.com/twigphp/intl-extra) package.
+This is a Laravel port of the [Twig Intl Extension](https://github.com/twigphp/intl-extra) package.
 
-The package can be used in any Laravel based application to quickly handle 
-internationalization by providing helper functions to ease usage in Blade templates and Laravel application codebase.
+The package can be used in any Laravel based application to quickly handle internationalization 
+by providing helper functions in Blade templates or Laravel codebase.
 
 System Requirements
 -------
@@ -25,7 +25,7 @@ Installation
 Use composer:
 
 ```
-composer require bakame/laravel-intl-extra
+composer require bakame/laravel-intl-formatter
 ```
 
 Configuration
@@ -34,18 +34,17 @@ Configuration
 In order to edit the default configuration you need to publish the package configuration to your application config directory:
 
 ```bash
-php artisan vendor:publish --provider="Bakame\Laravel\Intl\Extra" --tag=config
+php artisan vendor:publish --provider="Bakame\Laravel\Intl" --tag=config
 ```
 
-The configuration file will be published to `config/bakame-intl-extra.php` in your application directory.
+The configuration file will be published to `config/bakame-intl-formatter.php` in your application directory.
 
 Please refer to the config file for an overview of the available options.
 
 Documentation
 ------------
 
-Once installed the package provides a Facade `Bakame\Laravel\Intl\IntlExtension` and helper 
-global functions to use in Laravel based applications or in blade templates as shown below.
+Once installed the package provides global helper functions to use as shown below.
 
 ```blade
 country name: {{ country_name($country, $locale) }}
@@ -73,8 +72,14 @@ The following helper functions exist and use the same parameters as the ones fro
 
 Each function uses the same arguments in the same order as the Twig Extra package filters/functions.
 
-If you are using a Laravel application in PHP8+, you can use named parameters to improve functions
-usage.
+### Locale specification 
+
+If no `locale` is specified in function calls, the function will use the result of `Illuminate\Support\Facades\App::currentLocale()`
+as the locale value to use.
+
+### functions signature
+
+In PHP8+, you can use named parameters to improve functions usages as they tend to have a lot of arguments:
 
 **In PHP7.4**
 
@@ -126,7 +131,7 @@ Credits
 Attribution
 -------
 
-The package internal parser is heavily inspired by previous work done by [Gapple](https://twitter.com/gappleca) on [Structured Field Values for PHP](https://github.com/gapple/structured-fields/).
+The package `Formatter` class and the exposed functions are heavily inspired by previous works done by [Fabien Potencier](https://github.com/fabpot) on [Twig Intl Extension](https://github.com/twigphp/intl-extra).
 
 License
 -------

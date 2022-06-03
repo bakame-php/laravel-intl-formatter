@@ -7,9 +7,10 @@
 /.php-cs-fixer.php  export-ignore
 /docs               export-ignore
 /build              export-ignore
-/resources          export-ignore
+/test_files         export-ignore
 /phpstan.neon       export-ignore
 /phpunit.xml        export-ignore
+/CHANGELOG.md       export-ignore
 /README.md          export-ignore
 /**/*Test.php       export-ignore
 /**/Test**          export-ignore

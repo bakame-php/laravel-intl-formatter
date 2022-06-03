@@ -1,7 +1,28 @@
 {
-    "name": "bakame/laravel-intl-extra",
-    "description": "An intl twig extension port for laravel ecosystem",
+    "name": "bakame/laravel-intl-formatter",
+    "type": "library",
+    "description": "Global helpers for internalization in Laravel application",
+    "keywords": ["blade", "intl", "laravel", "date", "number", "formatter", "internalization"],
     "license": "MIT",
+    "authors": [
+        {
+            "name" : "Ignace Nyamagana Butera",
+            "email" : "nyamsprod@gmail.com",
+            "homepage" : "https://github.com/nyamsprod/",
+            "role" : "Developer"
+        }
+    ],
+    "support": {
+        "docs": "https://github.com/bakame-php/laravel-intl-formatter",
+        "issues": "https://github.com/bakame-php/laravel-intl-formatter/issues",
+        "source": "https://github.com/bakame-php/laravel-intl-formatter"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/nyamsprod"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Bakame\\Laravel\\Intl\\": "src/"
@@ -20,7 +41,7 @@
         "php": "^7.4 || ^8.0",
         "illuminate/config": "^8.0 || ^9.0",
         "illuminate/support": "^8.0 || ^9.0",
-        "symfony/intl": "^4.4||^5.0||^6.0"
+        "symfony/intl": "^5.0||^6.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",

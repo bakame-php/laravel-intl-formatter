@@ -27,7 +27,7 @@
         </report>
     </coverage>
     <testsuites>
-        <testsuite name="Bakame Laravel Intl Extra Test Suite">
+        <testsuite name="Bakame Laravel Intl Formatter Test Suite">
             <directory suffix="Test.php">src</directory>
         </testsuite>
     </testsuites>

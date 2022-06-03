@@ -19,7 +19,7 @@ _(Please explain in plain english the failing test)_
 
 ## Checks before submitting
 
-* [ ] Be sure that there isn't already a pull request about this. See: [Pull requests](https://github.com/bakame-php/laravel/intl-extra/pulls)
+* [ ] Be sure that there isn't already a pull request about this. See: [Pull requests](https://github.com/bakame-php/laravel-intl-formatter/pulls)
 * [ ] This pull request is about 1 bug fix and nothing more.
 * [ ] Be sure to always target the lowest supported PHP version.
 * [ ] Be sure to include tests.

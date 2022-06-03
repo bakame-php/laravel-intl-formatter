@@ -17,8 +17,8 @@ _(Please explain in plain english the feature you would like to see implemented.
 
 ## Checks before submitting
 
-* [ ] Be sure that there isn't already an issue about this. See: [Issues list](https://github.com/bakame-php/laravel/intl-extra/issues)
-* [ ] Be sure that there isn't already a pull request about this. See: [Pull requests](https://github.com/bakame-php/laravel/intl-extra/pulls)
+* [ ] Be sure that there isn't already an issue about this. See: [Issues list](https://github.com/bakame-php/laravel-intl-formatter/issues)
+* [ ] Be sure that there isn't already a pull request about this. See: [Pull requests](https://github.com/bakame-php/laravel-intl-formatter/pulls)
 * [ ] Tell if you have the option to provide the code for this proposal.
 * [ ] This issue is about 1 feature proposal and nothing more.
 * [ ] The issue has a descriptive title. For example: "Add JSON render option".
