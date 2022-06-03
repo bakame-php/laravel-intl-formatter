@@ -55,10 +55,7 @@
         "laravel": {
             "providers": [
                 "Provider"
-            ],
-            "aliases": {
-                "Formatter": "FormatterFacade"
-            }
+            ]
         }
     },
     "config": {

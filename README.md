@@ -11,10 +11,7 @@ Laravel Intl Extra
 This is a Laravel centric port of the [Twig Intl Extension](https://github.com/twigphp/intl-extra) package.
 
 The package can be used in any Laravel based application to quickly handle 
-internationalization by providing:
-
-- a `Formatter` class and its facade `FormatterFacade`
-- helper functions to ease usage in Blade templates and Laravel application codebase.
+internationalization by providing helper functions to ease usage in Blade templates and Laravel application codebase.
 
 System Requirements
 -------
@@ -30,6 +27,19 @@ Use composer:
 ```
 composer require bakame/laravel-intl-extra
 ```
+
+Configuration
+------------
+
+In order to edit the default configuration you need to publish the package configuration to your application config directory:
+
+```bash
+php artisan vendor:publish --provider="Bakame\Laravel\Intl\Extra" --tag=config
+```
+
+The configuration file will be published to `config/bakame-intl-extra.php` in your application directory.
+
+Please refer to the config file for an overview of the available options.
 
 Documentation
 ------------

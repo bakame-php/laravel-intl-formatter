@@ -48,7 +48,7 @@ final class HelpersTest extends LaravelTestCase
     protected function getPackageProviders($app): array
     {
         return [
-            FormatterProvider::class,
+            Provider::class,
         ];
     }
 

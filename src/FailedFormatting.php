@@ -6,6 +6,6 @@ namespace Bakame\Laravel\Intl;
 
 use RuntimeException;
 
-final class FormatterError extends RuntimeException
+final class FailedFormatting extends RuntimeException
 {
 }

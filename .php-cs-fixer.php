@@ -33,7 +33,7 @@ return $config
         'no_unused_imports' => true,
         'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
         'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
-        'phpdoc_align' => true,
+        'phpdoc_align' => ['align' => 'left'],
         'phpdoc_no_empty_return' => true,
         'phpdoc_order' => true,
         'phpdoc_scalar' => true,
