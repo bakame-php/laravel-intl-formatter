@@ -79,7 +79,7 @@ if (! function_exists('format_number')) {
     function format_number(
         $number,
         array $attrs = [],
-        string $style = 'decimal',
+        ?string $style = null,
         string $type = 'default',
         string $locale = null
     ): string {
@@ -94,9 +94,9 @@ if (! function_exists('format_datetime')) {
      */
     function format_datetime(
         $date,
-        ?string $dateFormat = 'medium',
-        ?string $timeFormat = 'medium',
-        ?string $pattern = '',
+        ?string $dateFormat = null,
+        ?string $timeFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null
@@ -120,8 +120,8 @@ if (! function_exists('format_date')) {
      */
     function format_date(
         $date,
-        ?string $dateFormat = 'medium',
-        ?string $pattern = '',
+        ?string $dateFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null
@@ -144,8 +144,8 @@ if (! function_exists('format_time')) {
      */
     function format_time(
         $date,
-        ?string $timeFormat = 'medium',
-        ?string $pattern = '',
+        ?string $timeFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null

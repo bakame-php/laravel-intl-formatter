@@ -22,7 +22,7 @@ final class FormatterTest extends TestCase
     {
         parent::setUp();
 
-        $this->formatter = Formatter::fromApplication(
+        $this->formatter = new Formatter(
             new Configuration(
                 IntlDateFormatter::FULL,
                 IntlDateFormatter::FULL,
@@ -39,15 +39,14 @@ final class FormatterTest extends TestCase
             IntlDateFormatter::FULL,
             IntlDateFormatter::FULL,
             NumberFormatter::DECIMAL,
-            '',
-            '',
+            null,
+            null,
             [NumberFormatter::FRACTION_DIGITS => 1],
             [NumberFormatter::POSITIVE_PREFIX => '++'],
             [NumberFormatter::DECIMAL_SEPARATOR_SYMBOL => 'x'],
         );
 
         $formatter = new Formatter(
-            new IntlDateFormatter('fr', IntlDateFormatter::FULL, IntlDateFormatter::FULL),
             $configuration,
             new CarbonDateResolver()
         );
@@ -62,19 +61,19 @@ final class FormatterTest extends TestCase
         $dateImmutable = new DateTimeImmutable('2019-08-07 23:39:12');
         $date = new DateTime('2019-08-07 23:39:12');
 
-        self::assertSame('Jun 3, 2022', $this->formatter->formatDate(1654247542));
-        self::assertSame('Jun 3, 2022', $this->formatter->formatDate('1654247542'));
+        self::assertSame('Jun 3, 2022', $this->formatter->formatDate(1654247542, 'medium'));
+        self::assertSame('Jun 3, 2022', $this->formatter->formatDate('1654247542', 'medium'));
         self::assertSame($this->formatter->formatDate(null), $this->formatter->formatDate('NoW'));
         self::assertSame($this->formatter->formatDate($date), $this->formatter->formatDate($dateImmutable));
         self::assertSame($this->formatter->formatDate($date), $this->formatter->formatDate($dateString));
         self::assertSame(
-            $this->formatter->formatDate($dateString, 'short', null, 'Africa/Kinshasa'),
-            $this->formatter->formatDate($dateString, 'short', null, new DateTimeZone('Africa/Kinshasa'))
+            $this->formatter->formatDate($dateString, 'full', null, 'Africa/Kinshasa'),
+            $this->formatter->formatDate($dateString, 'full', null, new DateTimeZone('Africa/Kinshasa'))
         );
 
         self::assertNotSame(
-            $this->formatter->formatDate($dateString, 'short', null, 'Africa/Kinshasa'),
-            $this->formatter->formatDate($dateString, 'short', null, false)
+            $this->formatter->formatDateTime($dateString, 'full', 'full', null, 'Africa/Kinshasa'),
+            $this->formatter->formatDateTime($dateString, 'full', 'full', null, false)
         );
     }
 

@@ -35,9 +35,9 @@ return [
         |
         | Refer to the docs for more information: https://unicode-org.github.io/icu/userguide/format_parse/datetime/
         |
-        | Expected: string
+        | Expected: ?string
         */
-        'pattern' => '',
+        'pattern' => null,
     ],
     'number' => [
         /*
@@ -59,9 +59,9 @@ return [
         |
         | Pattern string if the chosen style requires a pattern.
         |
-        | Expected: string
+        | Expected: ?string
         */
-        'pattern' => '',
+        'pattern' => null,
         /*
         |--------------------------------------------------------------------------
         | Number Attributes

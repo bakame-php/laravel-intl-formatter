@@ -21,7 +21,7 @@ final class Provider extends ServiceProvider
         $this->app->singleton('bakame.intl.formatter.config', fn ($app): Configuration => Configuration::fromApplication(
             $app->make('config')->get('bakame.intl.formatter.settings')
         ));
-        $this->app->singleton('bakame.intl.formatter', fn ($app): Formatter => Formatter::fromApplication(
+        $this->app->singleton('bakame.intl.formatter', fn ($app): Formatter => new Formatter(
             $app->make('bakame.intl.formatter.config'),
             $app->make('bakame.date.resolver')
         ));

@@ -84,7 +84,6 @@ final class Formatter
         'after_suffix' => NumberFormatter::PAD_AFTER_SUFFIX,
     ];
 
-    private IntlDateFormatter $dateFormatterPrototype;
     private Configuration $configuration;
     private DateResolver $dateResolver;
     /** @var array<IntlDateFormatter> */
@@ -92,30 +91,10 @@ final class Formatter
     /** @var array<NumberFormatter> */
     private array $numberFormatters = [];
 
-    public function __construct(
-        IntlDateFormatter $dateFormatterPrototype,
-        Configuration $configuration,
-        DateResolver $dateResolver
-    ) {
-        $this->dateFormatterPrototype = $dateFormatterPrototype;
+    public function __construct(Configuration $configuration, DateResolver $dateResolver)
+    {
         $this->configuration = $configuration;
         $this->dateResolver = $dateResolver;
-    }
-
-    public static function fromApplication(Configuration $configuration, DateResolver $dateResolver): self
-    {
-        return new self(
-            new IntlDateFormatter(
-                Locale::getDefault(),
-                $configuration->dateType,
-                $configuration->timeType,
-                null,
-                null,
-                $configuration->datePattern
-            ),
-            $configuration,
-            $dateResolver
-        );
     }
 
     public function getCountryName(?string $country, string $locale = null): string
@@ -231,13 +210,16 @@ final class Formatter
     public function formatNumber(
         $number,
         array $attrs = [],
-        string $style = 'decimal',
+        ?string $style = null,
         string $type = 'default',
         string $locale = null
     ): string {
         if (!isset(self::NUMBER_TYPES[$type])) {
             throw FailedFormatting::dueToUnknownNumberType($type, self::NUMBER_TYPES);
         }
+
+        /** @var string $style */
+        $style = $style ?? array_search($this->configuration->style, self::NUMBER_STYLES, true);
 
         $formatter = $this->createNumberFormatter($locale, $style, $attrs);
         if (false === $ret = $formatter->format($number, self::NUMBER_TYPES[$type])) {
@@ -257,9 +239,9 @@ final class Formatter
      */
     public function formatDateTime(
         $date,
-        ?string $dateFormat = 'medium',
-        ?string $timeFormat = 'medium',
-        ?string $pattern = '',
+        ?string $dateFormat = null,
+        ?string $timeFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null
@@ -286,8 +268,8 @@ final class Formatter
      */
     public function formatDate(
         $date,
-        ?string $dateFormat = 'medium',
-        ?string $pattern = '',
+        ?string $dateFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null
@@ -301,8 +283,8 @@ final class Formatter
      */
     public function formatTime(
         $date,
-        ?string $timeFormat = 'medium',
-        ?string $pattern = '',
+        ?string $timeFormat = null,
+        ?string $pattern = null,
         $timezone = null,
         string $calendar = 'gregorian',
         string $locale = null
@@ -327,14 +309,18 @@ final class Formatter
         }
 
         $locale = $locale ?? Locale::getDefault();
-        $calendar = 'gregorian' === $calendar ? IntlDateFormatter::GREGORIAN : IntlDateFormatter::TRADITIONAL;
-        $dateFormatValue = self::DATE_FORMATS[$dateFormat] ?? $this->dateFormatterPrototype->getDateType();
-        $timeFormatValue = self::DATE_FORMATS[$timeFormat] ?? $this->dateFormatterPrototype->getTimeType();
-        $pattern = $pattern ?? $this->dateFormatterPrototype->getPattern();
+        $calendar = 'gregorian' === strtolower($calendar) ? IntlDateFormatter::GREGORIAN : IntlDateFormatter::TRADITIONAL;
+        $dateFormatValue = self::DATE_FORMATS[$dateFormat] ?? $this->configuration->dateType;
+        $timeFormatValue = self::DATE_FORMATS[$timeFormat] ?? $this->configuration->timeType;
+        $pattern = $pattern ?? $this->configuration->datePattern;
 
         $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
         if (!isset($this->dateFormatters[$hash])) {
-            $this->dateFormatters[$hash] = new IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar, $pattern);
+            $dateFormatter = new IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar);
+            if (null !== $pattern) {
+                $dateFormatter->setPattern($pattern);
+            }
+            $this->dateFormatters[$hash] = $dateFormatter;
         }
 
         return $this->dateFormatters[$hash];
@@ -407,6 +393,10 @@ final class Formatter
 
         foreach ($this->configuration->symbolAttributes as $attribute => $value) {
             $numberFormatter->setSymbol($attribute, $value);
+        }
+
+        if (null !== $this->configuration->numberPattern) {
+            $numberFormatter->setPattern($this->configuration->numberPattern);
         }
     }
 }

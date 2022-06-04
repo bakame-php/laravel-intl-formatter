@@ -13,9 +13,9 @@ final class Configuration
     /** @readonly */
     public int $style;
     /** @readonly */
-    public string $datePattern;
+    public ?string $datePattern;
     /** @readonly */
-    public string $numberPattern;
+    public ?string $numberPattern;
     /**
      * @readonly
      * @var array<int, int|float>
@@ -41,8 +41,8 @@ final class Configuration
         int $dateType,
         int $timeType,
         int $style,
-        string $datePattern = '',
-        string $numberPattern = '',
+        ?string $datePattern = null,
+        ?string $numberPattern = null,
         array $attributes = [],
         array $textAttributes = [],
         array $symbolAttributes = []
@@ -62,11 +62,11 @@ final class Configuration
      *     date:array{
      *         dateType:int,
      *         timeType:int,
-     *         pattern:string
+     *         pattern:?string
      *     },
      *     number:array{
      *         style:int,
-     *         pattern:string,
+     *         pattern:?string,
      *         attributes:array<int, int|float>,
      *         textAttributes:array<int,string>,
      *         symbolAttributes:array<int,string>
