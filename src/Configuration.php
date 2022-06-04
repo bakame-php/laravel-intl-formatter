@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
+use Bakame\Laravel\Intl\Options\DateType;
+use Bakame\Laravel\Intl\Options\NumberStyle;
+use Bakame\Laravel\Intl\Options\TimeType;
+
 final class Configuration
 {
     /** @readonly */
-    public int $dateType;
+    public DateType $dateType;
     /** @readonly */
-    public int $timeType;
+    public TimeType $timeType;
     /** @readonly */
-    public int $style;
+    public NumberStyle $style;
     /** @readonly */
     public ?string $datePattern;
     /** @readonly */
@@ -38,14 +42,14 @@ final class Configuration
      * @param array<int, string> $symbolAttributes
      */
     public function __construct(
-        int $dateType,
-        int $timeType,
-        int $style,
-        ?string $datePattern = null,
-        ?string $numberPattern = null,
-        array $attributes = [],
-        array $textAttributes = [],
-        array $symbolAttributes = []
+        DateType    $dateType,
+        TimeType    $timeType,
+        NumberStyle $style,
+        ?string     $datePattern = null,
+        ?string     $numberPattern = null,
+        array       $attributes = [],
+        array       $textAttributes = [],
+        array       $symbolAttributes = []
     ) {
         $this->dateType = $dateType;
         $this->timeType = $timeType;
@@ -62,23 +66,43 @@ final class Configuration
      *     date:array{
      *         dateType:int,
      *         timeType:int,
-     *         pattern:?string
+     *         pattern?:?string
      *     },
      *     number:array{
      *         style:int,
-     *         pattern:?string,
-     *         attributes:array<int, int|float>,
-     *         textAttributes:array<int,string>,
-     *         symbolAttributes:array<int,string>
+     *         pattern?:?string,
+     *         attributes?:array<int, int|float>,
+     *         textAttributes?:array<int,string>,
+     *         symbolAttributes?:array<int,string>
      *     }
      * } $settings
      */
     public static function fromApplication(array $settings): self
     {
+        if (!array_key_exists('pattern', $settings['date'])) {
+            $settings['date']['pattern'] = null;
+        }
+
+        if (!array_key_exists('pattern', $settings['number'])) {
+            $settings['number']['pattern'] = null;
+        }
+
+        if (!array_key_exists('attributes', $settings['number'])) {
+            $settings['number']['attributes'] = [];
+        }
+
+        if (!array_key_exists('textAttributes', $settings['number'])) {
+            $settings['number']['textAttributes'] = [];
+        }
+
+        if (!array_key_exists('symbolAttributes', $settings['number'])) {
+            $settings['number']['symbolAttributes'] = [];
+        }
+
         return new self(
-            $settings['date']['dateType'],
-            $settings['date']['timeType'],
-            $settings['number']['style'],
+            DateType::from($settings['date']['dateType']),
+            TimeType::from($settings['date']['timeType']),
+            NumberStyle::from($settings['number']['style']),
             $settings['date']['pattern'],
             $settings['number']['pattern'],
             $settings['number']['attributes'],

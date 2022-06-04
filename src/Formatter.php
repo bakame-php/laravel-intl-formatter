@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
+use Bakame\Laravel\Intl\Options\DateType;
+use Bakame\Laravel\Intl\Options\NumberAttribute;
+use Bakame\Laravel\Intl\Options\NumberStyle;
+use Bakame\Laravel\Intl\Options\NumberType;
+use Bakame\Laravel\Intl\Options\TimeType;
 use DateTimeInterface;
 use DateTimeZone;
 use Exception;
@@ -19,71 +24,6 @@ use Symfony\Component\Intl\Timezones;
 
 final class Formatter
 {
-    private const DATE_FORMATS = [
-        'none' => IntlDateFormatter::NONE,
-        'short' => IntlDateFormatter::SHORT,
-        'medium' => IntlDateFormatter::MEDIUM,
-        'long' => IntlDateFormatter::LONG,
-        'full' => IntlDateFormatter::FULL,
-    ];
-
-    private const NUMBER_TYPES = [
-        'default' => NumberFormatter::TYPE_DEFAULT,
-        'int32' => NumberFormatter::TYPE_INT32,
-        'int64' => NumberFormatter::TYPE_INT64,
-        'double' => NumberFormatter::TYPE_DOUBLE,
-        'currency' => NumberFormatter::TYPE_CURRENCY,
-    ];
-
-    private const NUMBER_STYLES = [
-        'decimal' => NumberFormatter::DECIMAL,
-        'currency' => NumberFormatter::CURRENCY,
-        'percent' => NumberFormatter::PERCENT,
-        'scientific' => NumberFormatter::SCIENTIFIC,
-        'spellout' => NumberFormatter::SPELLOUT,
-        'ordinal' => NumberFormatter::ORDINAL,
-        'duration' => NumberFormatter::DURATION,
-    ];
-
-    private const NUMBER_ATTRIBUTES = [
-        'grouping_used' => NumberFormatter::GROUPING_USED,
-        'decimal_always_shown' => NumberFormatter::DECIMAL_ALWAYS_SHOWN,
-        'max_integer_digit' => NumberFormatter::MAX_INTEGER_DIGITS,
-        'min_integer_digit' => NumberFormatter::MIN_INTEGER_DIGITS,
-        'integer_digit' => NumberFormatter::INTEGER_DIGITS,
-        'max_fraction_digit' => NumberFormatter::MAX_FRACTION_DIGITS,
-        'min_fraction_digit' => NumberFormatter::MIN_FRACTION_DIGITS,
-        'fraction_digit' => NumberFormatter::FRACTION_DIGITS,
-        'multiplier' => NumberFormatter::MULTIPLIER,
-        'grouping_size' => NumberFormatter::GROUPING_SIZE,
-        'rounding_mode' => NumberFormatter::ROUNDING_MODE,
-        'rounding_increment' => NumberFormatter::ROUNDING_INCREMENT,
-        'format_width' => NumberFormatter::FORMAT_WIDTH,
-        'padding_position' => NumberFormatter::PADDING_POSITION,
-        'secondary_grouping_size' => NumberFormatter::SECONDARY_GROUPING_SIZE,
-        'significant_digits_used' => NumberFormatter::SIGNIFICANT_DIGITS_USED,
-        'min_significant_digits_used' => NumberFormatter::MIN_SIGNIFICANT_DIGITS,
-        'max_significant_digits_used' => NumberFormatter::MAX_SIGNIFICANT_DIGITS,
-        'lenient_parse' => NumberFormatter::LENIENT_PARSE,
-    ];
-
-    private const NUMBER_ROUNDING_ATTRIBUTES = [
-        'ceiling' => NumberFormatter::ROUND_CEILING,
-        'floor' => NumberFormatter::ROUND_FLOOR,
-        'down' => NumberFormatter::ROUND_DOWN,
-        'up' => NumberFormatter::ROUND_UP,
-        'halfeven' => NumberFormatter::ROUND_HALFEVEN,
-        'halfdown' => NumberFormatter::ROUND_HALFDOWN,
-        'halfup' => NumberFormatter::ROUND_HALFUP,
-    ];
-
-    private const NUMBER_PADDING_ATTRIBUTES = [
-        'before_prefix' => NumberFormatter::PAD_BEFORE_PREFIX,
-        'after_prefix' => NumberFormatter::PAD_AFTER_PREFIX,
-        'before_suffix' => NumberFormatter::PAD_BEFORE_SUFFIX,
-        'after_suffix' => NumberFormatter::PAD_AFTER_SUFFIX,
-    ];
-
     private Configuration $configuration;
     private DateResolver $dateResolver;
     /** @var array<IntlDateFormatter> */
@@ -193,7 +133,7 @@ final class Formatter
      */
     public function formatCurrency($amount, string $currency, array $attrs = [], string $locale = null): string
     {
-        $formatter = $this->createNumberFormatter($locale, 'currency', $attrs);
+        $formatter = $this->createNumberFormatter($locale, NumberStyle::fromName('currency'), $attrs);
         if (false === $ret = $formatter->formatCurrency($amount, $currency)) {
             // @codeCoverageIgnoreStart
             throw FailedFormatting::dueToNumberFormatter('Unable to format the given number as a currency.');
@@ -214,15 +154,9 @@ final class Formatter
         string $type = 'default',
         string $locale = null
     ): string {
-        if (!isset(self::NUMBER_TYPES[$type])) {
-            throw FailedFormatting::dueToUnknownNumberType($type, self::NUMBER_TYPES);
-        }
-
-        /** @var string $style */
-        $style = $style ?? array_search($this->configuration->style, self::NUMBER_STYLES, true);
-
+        $style = null === $style ? $this->configuration->style : NumberStyle::fromName($style);
         $formatter = $this->createNumberFormatter($locale, $style, $attrs);
-        if (false === $ret = $formatter->format($number, self::NUMBER_TYPES[$type])) {
+        if (false === $ret = $formatter->format($number, NumberType::fromName($type)->value)) {
             // @codeCoverageIgnoreStart
             throw FailedFormatting::dueToNumberFormatter('Unable to format the given number.');
             // @codeCoverageIgnoreEnd
@@ -300,23 +234,15 @@ final class Formatter
         DateTimeZone $timezone,
         string $calendar
     ): IntlDateFormatter {
-        if (null !== $dateFormat && !isset(self::DATE_FORMATS[$dateFormat])) {
-            throw FailedFormatting::dueToUnknownDateFormat($dateFormat, self::DATE_FORMATS);
-        }
-
-        if (null !== $timeFormat && !isset(self::DATE_FORMATS[$timeFormat])) {
-            throw FailedFormatting::dueToUnknownTimeFormat($timeFormat, self::DATE_FORMATS);
-        }
-
+        $dateType = null !== $dateFormat ? DateType::fromName($dateFormat) : $this->configuration->dateType;
+        $timeType = null !== $timeFormat ? TimeType::fromName($timeFormat) : $this->configuration->timeType;
         $locale = $locale ?? Locale::getDefault();
         $calendar = 'gregorian' === strtolower($calendar) ? IntlDateFormatter::GREGORIAN : IntlDateFormatter::TRADITIONAL;
-        $dateFormatValue = self::DATE_FORMATS[$dateFormat] ?? $this->configuration->dateType;
-        $timeFormatValue = self::DATE_FORMATS[$timeFormat] ?? $this->configuration->timeType;
         $pattern = $pattern ?? $this->configuration->datePattern;
 
-        $hash = $locale.'|'.$dateFormatValue.'|'.$timeFormatValue.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
+        $hash = $locale.'|'.$dateType->value.'|'.$timeType->value.'|'.$timezone->getName().'|'.$calendar.'|'.$pattern;
         if (!isset($this->dateFormatters[$hash])) {
-            $dateFormatter = new IntlDateFormatter($locale, $dateFormatValue, $timeFormatValue, $timezone, $calendar);
+            $dateFormatter = new IntlDateFormatter($locale, $dateType->value, $timeType->value, $timezone, $calendar);
             if (null !== $pattern) {
                 $dateFormatter->setPattern($pattern);
             }
@@ -329,18 +255,14 @@ final class Formatter
     /**
      * @param array<string, string|float|int> $attrs
      */
-    private function createNumberFormatter(?string $locale, string $style, array $attrs = []): NumberFormatter
+    private function createNumberFormatter(?string $locale, NumberStyle $style, array $attrs = []): NumberFormatter
     {
-        if (!isset(self::NUMBER_STYLES[$style])) {
-            throw FailedFormatting::dueToUnknownStyle($style, self::NUMBER_STYLES);
-        }
-
         $locale = $locale ?? Locale::getDefault();
 
         ksort($attrs);
-        $hash = $locale.'|'.$style.'|'.json_encode($attrs);
+        $hash = $locale.'|'.$style->value.'|'.json_encode($attrs);
         if (!isset($this->numberFormatters[$hash])) {
-            $newNumberFormatter = new NumberFormatter($locale, self::NUMBER_STYLES[$style]);
+            $newNumberFormatter = new NumberFormatter($locale, $style->value);
             $this->addDefaultAttributes($newNumberFormatter);
             $this->setNumberFormatterAttributes($newNumberFormatter, $attrs);
             $this->numberFormatters[$hash] = $newNumberFormatter;
@@ -355,29 +277,7 @@ final class Formatter
     private function setNumberFormatterAttributes(NumberFormatter $numberFormatter, array $attrs): void
     {
         foreach ($attrs as $name => $value) {
-            if (!isset(self::NUMBER_ATTRIBUTES[$name])) {
-                throw FailedFormatting::dueToUnknownNumberFormatterAttributeName($name, self::NUMBER_ATTRIBUTES);
-            }
-
-            if ('rounding_mode' === $name) {
-                if (!isset(self::NUMBER_ROUNDING_ATTRIBUTES[$value])) {
-                    throw FailedFormatting::dueToUnknownNumberFormatterRoundingMode($value, self::NUMBER_ROUNDING_ATTRIBUTES);
-                }
-
-                $value = self::NUMBER_ROUNDING_ATTRIBUTES[$value];
-            } elseif ('padding_position' === $name) {
-                if (!isset(self::NUMBER_PADDING_ATTRIBUTES[$value])) {
-                    throw FailedFormatting::dueToUnknownNumberFormatterPaddingPosition($value, self::NUMBER_PADDING_ATTRIBUTES);
-                }
-
-                $value = self::NUMBER_PADDING_ATTRIBUTES[$value];
-            }
-
-            if (is_string($value)) {
-                throw FailedFormatting::dueToInvalidNumberFormatterAttributeValue($name, $value);
-            }
-
-            $numberFormatter->setAttribute(self::NUMBER_ATTRIBUTES[$name], $value);
+            NumberAttribute::from($name, $value)->addTo($numberFormatter);
         }
     }
 

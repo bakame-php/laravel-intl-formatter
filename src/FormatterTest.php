@@ -23,11 +23,15 @@ final class FormatterTest extends TestCase
         parent::setUp();
 
         $this->formatter = new Formatter(
-            new Configuration(
-                IntlDateFormatter::FULL,
-                IntlDateFormatter::FULL,
-                NumberFormatter::DECIMAL
-            ),
+            Configuration::fromApplication([
+                'date' => [
+                    'dateType' => IntlDateFormatter::FULL,
+                    'timeType' => IntlDateFormatter::FULL,
+                ],
+                'number' => [
+                    'style' => NumberFormatter::DECIMAL,
+                ],
+            ]),
             new CarbonDateResolver()
         );
     }
@@ -35,21 +39,20 @@ final class FormatterTest extends TestCase
     /** @test */
     public function it_can_be_instantiated_with_a_different_configuration(): void
     {
-        $configuration = new Configuration(
-            IntlDateFormatter::FULL,
-            IntlDateFormatter::FULL,
-            NumberFormatter::DECIMAL,
-            null,
-            null,
-            [NumberFormatter::FRACTION_DIGITS => 1],
-            [NumberFormatter::POSITIVE_PREFIX => '++'],
-            [NumberFormatter::DECIMAL_SEPARATOR_SYMBOL => 'x'],
-        );
+        $configuration = Configuration::fromApplication([
+            'date' => [
+                'dateType' => IntlDateFormatter::FULL,
+                'timeType' => IntlDateFormatter::FULL,
+            ],
+            'number' => [
+                'style' => NumberFormatter::DECIMAL,
+                'attributes' => [NumberFormatter::FRACTION_DIGITS => 1],
+                'textAttributes' => [NumberFormatter::POSITIVE_PREFIX => '++'],
+                'symbolAttributes' => [NumberFormatter::DECIMAL_SEPARATOR_SYMBOL => 'x'],
+            ],
+        ]);
 
-        $formatter = new Formatter(
-            $configuration,
-            new CarbonDateResolver()
-        );
+        $formatter = new Formatter($configuration, new CarbonDateResolver());
 
         self::assertSame('++12x3', $formatter->formatNumber(12.3456, ['padding_position' => 'after_prefix'], 'decimal', 'default', 'fr'));
     }

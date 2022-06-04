@@ -123,7 +123,6 @@ EXPECTED;
 €12.34
 YEN 125,000.00
 EXPECTED;
-        //dd($content, $expected);
         foreach (explode(PHP_EOL, $expected) as $expectedLine) {
             self::assertStringContainsString($expectedLine, $content);
         }

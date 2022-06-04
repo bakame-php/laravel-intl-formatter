@@ -29,33 +29,9 @@ final class FailedFormatting extends RuntimeException
     /**
      * @param array<string,mixed> $supported
      */
-    public static function dueToUnknownTimeFormat(string $format, array $supported): self
+    public static function dueToUnknownOptions(string $name, string $format, array $supported): self
     {
-        return new self('The time format "'.$format.'" does not exist, known formats are: "'.implode('", "', array_keys($supported)).'".');
-    }
-
-    /**
-     * @param array<string,mixed> $supported
-     */
-    public static function dueToUnknownDateFormat(string $format, array $supported): self
-    {
-        return new self('The date format "'.$format.'" does not exist, known formats are: "'.implode('", "', array_keys($supported)).'".');
-    }
-
-    /**
-     * @param array<string,mixed> $supported
-     */
-    public static function dueToUnknownStyle(string $style, array $supported): self
-    {
-        return new self('The style "'.$style.'" does not exist, known styles are: "'.implode('", "', array_keys($supported)).'".');
-    }
-
-    /**
-     * @param array<string,mixed> $supported
-     */
-    public static function dueToUnknownNumberType(string $type, array $supported): self
-    {
-        return new self('The type "'.$type.'" does not exist, known types are: "'.implode('", "', array_keys($supported)).'".');
+        return new self('The '.$name.' "'.$format.'" does not exist; expecting one value of : "'.implode('", "', array_keys($supported)).'".');
     }
 
     /**
@@ -84,7 +60,10 @@ final class FailedFormatting extends RuntimeException
         return new self('The number formatter padding position "'.$value.'" does not exist, known positions are: "'.implode('", "', array_keys($supported)).'".');
     }
 
-    public static function dueToInvalidNumberFormatterAttributeValue(string $name, string $value): self
+    /**
+     * @param int|float|string $value
+     */
+    public static function dueToInvalidNumberFormatterAttributeValue(string $name, $value): self
     {
         return new self('The number formatter value for "'.$name.'" can not be a string: "'.$value.'"');
     }
