@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Bakame\Laravel\Intl;
 
+use Bakame\Intl\Configuration;
+use Bakame\Intl\DateResolver;
+use Bakame\Intl\Formatter;
+use Bakame\Intl\SystemDateResolver;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 
