@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\App;
 use Bakame\Intl\Laravel\Formatter;
+use Illuminate\Support\Facades\App;
 
 if (! function_exists('country_name')) {
     function country_name(?string $country, string $locale = null): string

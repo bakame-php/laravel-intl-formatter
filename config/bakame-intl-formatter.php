@@ -8,12 +8,15 @@ return [
         |--------------------------------------------------------------------------
         |
         | Date type to use (none, short, medium, long, full). This is one of the IntlDateFormatter constants.
+        | In PHP8+ you can add (relative_short, relative_medium, relative_long, relative_full)
         |
         | Refer to the docs for more information: https://www.php.net/manual/en/intldateformatter.create.php
         |
+        | Refer to Bakame\Intl\Options\DateType class
+        |
         | Expected: string
         */
-        'dateType' => IntlDateFormatter::MEDIUM,
+        'dateFormat' => 'medium',
         /*
         |--------------------------------------------------------------------------
         | Time Type
@@ -23,9 +26,11 @@ return [
         |
         | Refer to the docs for more information: https://www.php.net/manual/en/intldateformatter.create.php
         |
+        | Refer to Bakame\Intl\Options\TimeType class
+        |
         | Expected: string
         */
-        'timeType' => IntlDateFormatter::MEDIUM,
+        'timeFormat' => 'medium',
         /*
         |--------------------------------------------------------------------------
         | Date Pattern
@@ -50,8 +55,12 @@ return [
         | which must conform to the syntax described in » ICU DecimalFormat documentation or »
         | ICU RuleBasedNumberFormat documentation, respectively.
         |
+        | Expected: string
+        |
+        | Refer to Bakame\Intl\Options\NumberStyle class
+        |
         */
-        'style' => NumberFormatter::DECIMAL,
+        'style' => 'decimal',
         /*
         |--------------------------------------------------------------------------
         | Number Pattern
@@ -70,9 +79,10 @@ return [
         | Set a numeric attribute associated with the formatter.
         | An example of a numeric attribute is the number of integer digits the formatter will produce.
         |
-        | Expected: array<int, int|float>
+        | Expected: array<string, int|float>
         |
         | Refer to the docs for more information: https://www.php.net/manual/en/numberformatter.setattribute.php
+        | Refer to Bakame\Intl\Options\NumberAttribute class
         */
         'attributes' => [],
         /*
@@ -86,9 +96,10 @@ return [
         |
         | Rule-based formatters only understand NumberFormatter::DEFAULT_RULESET and NumberFormatter::PUBLIC_RULESETS.
         |
-        | Expected: array<int, string>
+        | Expected: array<string, string>
         |
         | Refer to the docs for more information: https://www.php.net/manual/en/numberformatter.settextattribute.php
+        | Refer to Bakame\Intl\Options\TextAttribute class
         */
         'textAttributes' => [],
         /*
@@ -100,9 +111,10 @@ return [
         | locale-dependent characters in a number, for example the percent sign. This API is not supported
         | for rule-based formatters.
         |
-        | Expected: array<int, string>
+        | Expected: array<string, string>
         |
         | Refer to the docs for more information: https://www.php.net/manual/en/numberformatter.setsymbol.php
+        | Refer to Bakame\Intl\Options\SymbolAttribute class
         */
         'symbolAttributes' => [],
     ],
