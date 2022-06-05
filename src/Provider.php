@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bakame\Laravel\Intl;
+namespace Bakame\Intl\Laravel;
 
 use Bakame\Intl\Configuration;
 use Bakame\Intl\DateResolver;

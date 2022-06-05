@@ -25,7 +25,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Bakame\\Laravel\\Intl\\": "src/"
+            "Bakame\\Intl\\Laravel\\": "src/"
         },
         "files": [
             "src/helpers.php"
@@ -75,10 +75,15 @@
         "laravel": {
             "providers": [
                 "Provider"
-            ]
+            ],
+            "aliases": {
+                "Formatter": "Bakame\\Int\\Laravel\\Formatter"
+            }
         }
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

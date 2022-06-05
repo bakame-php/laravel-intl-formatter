@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bakame\Laravel\Intl;
+namespace Bakame\Intl\Laravel;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory as ViewFactory;

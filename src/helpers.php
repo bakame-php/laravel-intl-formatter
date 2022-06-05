@@ -3,46 +3,47 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\App;
+use Bakame\Intl\Laravel\Formatter;
 
 if (! function_exists('country_name')) {
     function country_name(?string $country, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getCountryName($country, $locale ?? App::currentLocale());
+        return Formatter::getCountryName($country, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('currency_name')) {
     function currency_name(?string $currency, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getCurrencyName($currency, $locale ?? App::currentLocale());
+        return Formatter::getCurrencyName($currency, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('currency_symbol')) {
     function currency_symbol(?string $currency, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getCurrencySymbol($currency, $locale ?? App::currentLocale());
+        return Formatter::getCurrencySymbol($currency, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('language_name')) {
     function language_name(?string $language, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getLanguageName($language, $locale ?? App::currentLocale());
+        return Formatter::getLanguageName($language, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('locale_name')) {
     function locale_name(?string $data, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getLocaleName($data, $locale ?? App::currentLocale());
+        return Formatter::getLocaleName($data, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('timezone_name')) {
     function timezone_name(?string $timezone, string $locale = null): string
     {
-        return app('bakame.intl.formatter')->getTimezoneName($timezone, $locale ?? App::currentLocale());
+        return Formatter::getTimezoneName($timezone, $locale ?? App::currentLocale());
     }
 }
 
@@ -52,7 +53,7 @@ if (! function_exists('country_timezones')) {
      */
     function country_timezones(string $country): array
     {
-        return app('bakame.intl.formatter')->getCountryTimezones($country);
+        return Formatter::getCountryTimezones($country);
     }
 }
 
@@ -67,7 +68,7 @@ if (! function_exists('format_currency')) {
         array $attrs = [],
         string $locale = null
     ): string {
-        return app('bakame.intl.formatter')->formatCurrency($amount, $currency, $attrs, $locale ?? App::currentLocale());
+        return Formatter::formatCurrency($amount, $currency, $attrs, $locale ?? App::currentLocale());
     }
 }
 
@@ -83,7 +84,7 @@ if (! function_exists('format_number')) {
         string $type = 'default',
         string $locale = null
     ): string {
-        return app('bakame.intl.formatter')->formatNumber($number, $attrs, $style, $type, $locale ?? App::currentLocale());
+        return Formatter::formatNumber($number, $attrs, $style, $type, $locale ?? App::currentLocale());
     }
 }
 
@@ -101,7 +102,7 @@ if (! function_exists('format_datetime')) {
         string $calendar = 'gregorian',
         string $locale = null
     ): string {
-        return app('bakame.intl.formatter')->formatDateTime(
+        return Formatter::formatDateTime(
             $date,
             $dateFormat,
             $timeFormat,
@@ -126,7 +127,7 @@ if (! function_exists('format_date')) {
         string $calendar = 'gregorian',
         string $locale = null
     ): string {
-        return app('bakame.intl.formatter')->formatDate(
+        return Formatter::formatDate(
             $date,
             $dateFormat,
             $pattern,
@@ -150,7 +151,7 @@ if (! function_exists('format_time')) {
         string $calendar = 'gregorian',
         string $locale = null
     ): string {
-        return app('bakame.intl.formatter')->formatTime(
+        return Formatter::formatTime(
             $date,
             $timeFormat,
             $pattern,
