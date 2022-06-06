@@ -39,7 +39,7 @@
         "php": "^7.4 || ^8.0",
         "illuminate/config": "^8.0 || ^9.0",
         "illuminate/support": "^8.0 || ^9.0",
-        "bakame/intl-formatter": "0.1.0"
+        "bakame/intl-formatter": "~0.2.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",
@@ -74,10 +74,10 @@
         },
         "laravel": {
             "providers": [
-                "Provider"
+                "Bakame\\Intl\\Laravel\\Provider"
             ],
             "aliases": {
-                "Formatter": "Bakame\\Int\\Laravel\\Formatter"
+                "Formatter": "Bakame\\Intl\\Laravel\\Formatter"
             }
         }
     },

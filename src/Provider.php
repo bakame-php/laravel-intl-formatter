@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Bakame\Intl\Laravel;
 
-use Bakame\Intl\Configuration;
 use Bakame\Intl\DateResolver;
 use Bakame\Intl\Formatter;
-use Bakame\Intl\SystemDateResolver;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 final class Provider extends ServiceProvider
 {
+    public function boot(): void
+    {
+        $this->offerPublishing();
+    }
+
     public function register(): void
     {
         parent::register();
@@ -22,15 +25,28 @@ final class Provider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(BKM_INTL_FORMATTER.'/config/bakame-intl-formatter.php', 'bakame.intl.formatter.settings');
-        $this->app->singleton('bakame.date.resolver', fn (): DateResolver => SystemDateResolver::fromTimeZone(
+        $this->app->singleton('bakame.date.resolver', fn (): DateResolver => DateResolver::fromTimeZone(
             Carbon::now()->getTimezone()
         ));
-        $this->app->singleton('bakame.intl.formatter.config', fn ($app): Configuration => Configuration::fromApplication(
+
+        $this->app->singleton('bakame.intl.formatter.factory', fn ($app): Factory => Factory::fromAssociative(
             $app->make('config')->get('bakame.intl.formatter.settings')
         ));
-        $this->app->singleton('bakame.intl.formatter', fn ($app): Formatter => new Formatter(
-            $app->make('bakame.intl.formatter.config'),
-            $app->make('bakame.date.resolver')
-        ));
+
+        $this->app->singleton(
+            'bakame.intl.formatter',
+            fn ($app): Formatter => $app->make('bakame.intl.formatter.factory')->newInstance(
+                $app->make('bakame.date.resolver')
+            )
+        );
+    }
+
+    protected function offerPublishing(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                BKM_INTL_FORMATTER.'/config/bakame-intl-formatter.php' => config_path('bakame-intl-formatter.php'),
+            ], 'config');
+        }
     }
 }

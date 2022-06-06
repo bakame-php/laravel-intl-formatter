@@ -6,7 +6,7 @@ namespace Bakame\Intl\Laravel;
 
 use Illuminate\Support\Facades\Facade;
 
-final class Formatter extends Facade
+final class IntlFormatter extends Facade
 {
     /**
      * Get the registered name of the component.

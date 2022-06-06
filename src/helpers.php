@@ -2,48 +2,48 @@
 
 declare(strict_types=1);
 
-use Bakame\Intl\Laravel\Formatter;
+use Bakame\Intl\Laravel\IntlFormatter;
 use Illuminate\Support\Facades\App;
 
 if (! function_exists('country_name')) {
     function country_name(?string $country, string $locale = null): string
     {
-        return Formatter::getCountryName($country, $locale ?? App::currentLocale());
+        return IntlFormatter::getCountryName($country, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('currency_name')) {
     function currency_name(?string $currency, string $locale = null): string
     {
-        return Formatter::getCurrencyName($currency, $locale ?? App::currentLocale());
+        return IntlFormatter::getCurrencyName($currency, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('currency_symbol')) {
     function currency_symbol(?string $currency, string $locale = null): string
     {
-        return Formatter::getCurrencySymbol($currency, $locale ?? App::currentLocale());
+        return IntlFormatter::getCurrencySymbol($currency, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('language_name')) {
     function language_name(?string $language, string $locale = null): string
     {
-        return Formatter::getLanguageName($language, $locale ?? App::currentLocale());
+        return IntlFormatter::getLanguageName($language, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('locale_name')) {
     function locale_name(?string $data, string $locale = null): string
     {
-        return Formatter::getLocaleName($data, $locale ?? App::currentLocale());
+        return IntlFormatter::getLocaleName($data, $locale ?? App::currentLocale());
     }
 }
 
 if (! function_exists('timezone_name')) {
     function timezone_name(?string $timezone, string $locale = null): string
     {
-        return Formatter::getTimezoneName($timezone, $locale ?? App::currentLocale());
+        return IntlFormatter::getTimezoneName($timezone, $locale ?? App::currentLocale());
     }
 }
 
@@ -53,7 +53,7 @@ if (! function_exists('country_timezones')) {
      */
     function country_timezones(string $country): array
     {
-        return Formatter::getCountryTimezones($country);
+        return IntlFormatter::getCountryTimezones($country);
     }
 }
 
@@ -65,10 +65,10 @@ if (! function_exists('format_currency')) {
     function format_currency(
         $amount,
         string $currency,
-        array $attrs = [],
-        string $locale = null
+        string $locale = null,
+        array $attrs = []
     ): string {
-        return Formatter::formatCurrency($amount, $currency, $attrs, $locale ?? App::currentLocale());
+        return IntlFormatter::formatCurrency($amount, $currency, $locale ?? App::currentLocale(), $attrs);
     }
 }
 
@@ -79,12 +79,12 @@ if (! function_exists('format_number')) {
      */
     function format_number(
         $number,
-        array $attrs = [],
-        ?string $style = null,
+        string $locale = null,
         string $type = 'default',
-        string $locale = null
+        array $attrs = [],
+        ?string $style = null
     ): string {
-        return Formatter::formatNumber($number, $attrs, $style, $type, $locale ?? App::currentLocale());
+        return IntlFormatter::formatNumber($number, $locale ?? App::currentLocale(), $type, $attrs, $style);
     }
 }
 
@@ -95,21 +95,21 @@ if (! function_exists('format_datetime')) {
      */
     function format_datetime(
         $date,
+        string $locale = null,
+        $timezone = null,
         ?string $dateFormat = null,
         ?string $timeFormat = null,
         ?string $pattern = null,
-        $timezone = null,
-        string $calendar = 'gregorian',
-        string $locale = null
+        ?string $calendar = null
     ): string {
-        return Formatter::formatDateTime(
+        return IntlFormatter::formatDateTime(
             $date,
+            $locale ?? App::currentLocale(),
+            $timezone,
             $dateFormat,
             $timeFormat,
             $pattern,
-            $timezone,
-            $calendar,
-            $locale ?? App::currentLocale()
+            $calendar
         );
     }
 }
@@ -121,19 +121,19 @@ if (! function_exists('format_date')) {
      */
     function format_date(
         $date,
+        string $locale = null,
+        $timezone = null,
         ?string $dateFormat = null,
         ?string $pattern = null,
-        $timezone = null,
-        string $calendar = 'gregorian',
-        string $locale = null
+        ?string $calendar = null
     ): string {
-        return Formatter::formatDate(
+        return IntlFormatter::formatDate(
             $date,
+            $locale ?? App::currentLocale(),
+            $timezone,
             $dateFormat,
             $pattern,
-            $timezone,
-            $calendar,
-            $locale ?? App::currentLocale()
+            $calendar
         );
     }
 }
@@ -145,19 +145,19 @@ if (! function_exists('format_time')) {
      */
     function format_time(
         $date,
+        string $locale = null,
+        $timezone = null,
         ?string $timeFormat = null,
         ?string $pattern = null,
-        $timezone = null,
-        string $calendar = 'gregorian',
-        string $locale = null
+        ?string $calendar = null
     ): string {
-        return Formatter::formatTime(
+        return IntlFormatter::formatTime(
             $date,
+            $locale ?? App::currentLocale(),
+            $timezone,
             $timeFormat,
             $pattern,
-            $timezone,
-            $calendar,
-            $locale ?? App::currentLocale()
+            $calendar
         );
     }
 }

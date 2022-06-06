@@ -43,6 +43,14 @@ return [
         | Expected: ?string
         */
         'pattern' => null,
+        /*
+        |--------------------------------------------------------------------------
+        | Calendar
+        |--------------------------------------------------------------------------
+        |
+        | Calendar to use (gregorian, traditional)
+        */
+        'calendar' => 'gregorian',
     ],
     'number' => [
         /*

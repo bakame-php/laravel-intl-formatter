@@ -3,9 +3,9 @@ Laravel Intl Formatter
 
 [![Author](http://img.shields.io/badge/author-@nyamsprod-blue.svg?style=flat-square)](https://twitter.com/nyamsprod)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build](https://github.com/bakame-php/laravel-intl-extra/workflows/build/badge.svg)](https://github.com/bakame-php/laravel-intl-extra/actions?query=workflow%3A%22build%22)
-[![Latest Version](https://img.shields.io/github/release/bakame-php/laravel-intl-extra.svg?style=flat-square)](https://github.com/bakame-php/laravel-intl-extra/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/bakame/laravel-intl-extra.svg?style=flat-square)](https://packagist.org/packages/bakame/laravel-intl-extra)
+[![Build](https://github.com/bakame-php/laravel-intl-formatter/workflows/build/badge.svg)](https://github.com/bakame-php/laravel-intl-formatter/actions?query=workflow%3A%22build%22)
+[![Latest Version](https://img.shields.io/github/release/bakame-php/laravel-intl-formatter.svg?style=flat-square)](https://github.com/bakame-php/laravel-intl-formatter/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/bakame/laravel-intl-formatter.svg?style=flat-square)](https://packagist.org/packages/bakame/laravel-intl-formatter)
 [![Sponsor development of this project](https://img.shields.io/badge/sponsor%20this%20package-%E2%9D%A4-ff69b4.svg?style=flat-square)](https://github.com/sponsors/nyamsprod)
 
 This is a Laravel port of the [Twig Intl Extension](https://github.com/twigphp/intl-extra) package.
@@ -164,7 +164,7 @@ echo view($templatePath, $templateData)->render();
 Formats a number;
 
 ```blade
-format number: {{ format_number($number, $attrs, $locale) }}
+format number: {{ format_number($number, $locale, $attrs) }}
 ```
 
 ```php
@@ -187,7 +187,7 @@ echo view($templatePath, $templateData)->render();
 Formats a date and time;
 
 ```blade
-format datetime: {{ format_datetime($date, $dateFormat, $timeFormat, $pattern, $timezone, $calendar, $locale) }}
+format datetime: {{ format_datetime($date, $locale, $timezone, $dateFormat, $timeFormat, $pattern, $calendar) }}
 ```
 
 ```php
@@ -209,7 +209,7 @@ echo view($templatePath, $templateData)->render();
 Formats a the date portion of a datetime;
 
 ```blade
-format date: {{ format_date($date, $dateFormat, $pattern, $timezone, $calendar, $locale) }}
+format date: {{ format_date($date, $locale, $timezone, $dateFormat, $pattern, $calendar) }}
 ```
 
 ```php
@@ -230,7 +230,7 @@ echo view($templatePath, $templateData)->render();
 Formats the time portion of a datetime;
 
 ```blade
-format time: {{ format_time($date, $timeFormat, $pattern, $timezone, $calendar, $locale) }}
+format time: {{ format_time($date, $locale, $timezone, $timeFormat, $pattern, $calendar) }}
 ```
 
 ```php
@@ -262,7 +262,7 @@ In PHP8+, you can use named parameters to improve functions usages as they tend 
 ```php 
 <?php
 
-echo format_datetime('2019-08-07 23:39:12', 'mediun', 'medium', '', null, 'gregorian', 'fr');
+echo format_datetime('2019-08-07 23:39:12', 'fr', null, medium', 'medium', '', 'gregorian', 'fr');
 ```
 
 **In PHP8+**
@@ -302,7 +302,7 @@ Credits
 -------
 
 - [ignace nyamagana butera](https://github.com/nyamsprod)
-- [All Contributors](https://github.com/bakame-php/laravel-intl-extra/contributors)
+- [All Contributors](https://github.com/bakame-php/laravel-intl-formatter/contributors)
 
 Attribution
 -------
