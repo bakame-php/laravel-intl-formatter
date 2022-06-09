@@ -65,7 +65,7 @@ if (! function_exists('format_currency')) {
     function format_currency(
         $amount,
         string $currency,
-        string $locale = null,
+        ?string $locale = null,
         array $attrs = []
     ): string {
         return IntlFormatter::formatCurrency($amount, $currency, $locale ?? App::currentLocale(), $attrs);
@@ -79,7 +79,7 @@ if (! function_exists('format_number')) {
      */
     function format_number(
         $number,
-        string $locale = null,
+        ?string $locale = null,
         string $type = 'default',
         array $attrs = [],
         ?string $style = null
@@ -95,7 +95,7 @@ if (! function_exists('format_datetime')) {
      */
     function format_datetime(
         $date,
-        string $locale = null,
+        ?string $locale = null,
         $timezone = null,
         ?string $dateFormat = null,
         ?string $timeFormat = null,
@@ -121,7 +121,7 @@ if (! function_exists('format_date')) {
      */
     function format_date(
         $date,
-        string $locale = null,
+        ?string $locale = null,
         $timezone = null,
         ?string $dateFormat = null,
         ?string $pattern = null,
@@ -145,7 +145,7 @@ if (! function_exists('format_time')) {
      */
     function format_time(
         $date,
-        string $locale = null,
+        ?string $locale = null,
         $timezone = null,
         ?string $timeFormat = null,
         ?string $pattern = null,
