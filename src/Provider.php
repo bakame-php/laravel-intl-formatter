@@ -35,7 +35,7 @@ final class Provider extends ServiceProvider
         ));
         $this->app->singleton(
             'bakame.intl.formatter',
-            fn ($app): Formatter => $app->make('bakame.intl.formatter.factory')->newInstance(
+            fn ($app): Formatter => $app->make('bakame.intl.formatter.factory')->newFormatter(
                 $app->make('bakame.date.resolver')
             )
         );

@@ -45,7 +45,7 @@ final class Factory
         );
     }
 
-    public function newInstance(DateResolver $dateResolver): Formatter
+    public function newFormatter(DateResolver $dateResolver): Formatter
     {
         return new Formatter(
             $this->dateFactory,
