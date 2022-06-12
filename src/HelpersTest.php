@@ -122,6 +122,7 @@ EXPECTED;
 €1,000,000.00
 €12.34
 YEN 125,000.00
+€12.34
 EXPECTED;
         foreach (explode(PHP_EOL, $expected) as $expectedLine) {
             self::assertStringContainsString($expectedLine, $content);

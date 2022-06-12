@@ -3,7 +3,12 @@
 declare(strict_types=1);
 
 use Bakame\Intl\Laravel\IntlFormatter;
+use Bakame\Intl\Option\AttributeFormat;
+use Bakame\Intl\Option\PaddingPosition;
+use Bakame\Intl\Option\RoundingMode;
 use Illuminate\Support\Facades\App;
+use Money\Formatter\IntlMoneyFormatter;
+use Money\Money;
 
 if (! function_exists('country_name')) {
     function country_name(?string $country, string $locale = null): string
@@ -59,15 +64,22 @@ if (! function_exists('country_timezones')) {
 
 if (! function_exists('format_currency')) {
     /**
-     * @param int|float $amount
-     * @param array<string, int|float> $attrs
+     * @param int|float|Money $amount
+     * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
      */
     function format_currency(
         $amount,
-        string $currency,
+        ?string $currency = null,
         ?string $locale = null,
         array $attrs = []
     ): string {
+        if ($amount instanceof Money) {
+            /** @var IntlMoneyFormatter $intlMoneyFormatter */
+            $intlMoneyFormatter = app()->make('bakame.intl.formatter.factory')->newIntlMoneyFormatter($locale, $attrs);
+
+            return $intlMoneyFormatter->format($amount);
+        }
+
         return IntlFormatter::formatCurrency($amount, $currency, $locale ?? App::currentLocale(), $attrs);
     }
 }

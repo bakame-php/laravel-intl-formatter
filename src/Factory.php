@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Bakame\Intl\Laravel;
 
+use Bakame\Intl\Option\AttributeFormat;
+use Bakame\Intl\Option\PaddingPosition;
+use Bakame\Intl\Option\RoundingMode;
 use Bakame\Intl\DateFactory;
 use Bakame\Intl\DateResolver;
 use Bakame\Intl\Formatter;
 use Bakame\Intl\NumberFactory;
+use Locale;
+use Money\Currencies\ISOCurrencies;
+use Money\Formatter\IntlMoneyFormatter;
 
 final class Factory
 {
@@ -52,5 +58,25 @@ final class Factory
             $this->numberFactory,
             $dateResolver
         );
+    }
+
+    /**
+     * @param string|null $locale
+     * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
+     * @return IntlMoneyFormatter
+     */
+    public function newIntlMoneyFormatter(?string $locale = null, array $attrs = []): IntlMoneyFormatter
+    {
+        $locale = $locale ?? Locale::getDefault();
+        $hash = $locale.'|'.json_encode($attrs);
+        static $instances = [];
+        if (!isset($instances[$hash])) {
+            $instances[$hash] = new IntlMoneyFormatter(
+                $this->numberFactory->createNumberFormatter($locale, 'currency', $attrs),
+                new ISOCurrencies()
+            );
+        }
+
+        return $instances[$hash];
     }
 }
