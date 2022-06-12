@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Bakame\Intl\Laravel;
 
-use Bakame\Intl\Option\AttributeFormat;
-use Bakame\Intl\Option\PaddingPosition;
-use Bakame\Intl\Option\RoundingMode;
 use Bakame\Intl\DateFactory;
 use Bakame\Intl\DateResolver;
 use Bakame\Intl\Formatter;
 use Bakame\Intl\NumberFactory;
+use Bakame\Intl\Option\AttributeFormat;
+use Bakame\Intl\Option\CalendarFormat;
+use Bakame\Intl\Option\DateFormat;
+use Bakame\Intl\Option\PaddingPosition;
+use Bakame\Intl\Option\RoundingMode;
+use Bakame\Intl\Option\StyleFormat;
+use Bakame\Intl\Option\SymbolFormat;
+use Bakame\Intl\Option\TextFormat;
+use Bakame\Intl\Option\TimeFormat;
 use Locale;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
@@ -29,17 +35,17 @@ final class Factory
     /**
      * @param array{
      *     date:array{
-     *         dateFormat:string,
-     *         timeFormat:string,
-     *         calendar:string,
-     *         pattern?:?string
+     *         dateFormat:key-of<DateFormat::INTL_MAPPER>,
+     *         timeFormat:key-of<TimeFormat::INTL_MAPPER>,
+     *         calendar:key-of<CalendarFormat::INTL_MAPPER>,
+     *         pattern?:?string,
      *     },
      *     number:array{
-     *         style:string,
-     *         attributes:array<string, int|float|string>,
-     *         textAttributes:array<string, string>,
-     *         symbolAttributes:array<string, string>,
-     *         pattern?:?string
+     *         style:key-of<StyleFormat::INTL_MAPPER>,
+     *         pattern?:?string,
+     *         attributes?:array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>>,
+     *         textAttributes?:array<key-of<TextFormat::INTL_MAPPER>, string>,
+     *         symbolAttributes?:array<key-of<SymbolFormat::INTL_MAPPER>, string>
      *     }
      * } $settings
      */
@@ -61,9 +67,7 @@ final class Factory
     }
 
     /**
-     * @param string|null $locale
      * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
-     * @return IntlMoneyFormatter
      */
     public function newIntlMoneyFormatter(?string $locale = null, array $attrs = []): IntlMoneyFormatter
     {

@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
+use Bakame\Intl\FailedFormatting;
+use Bakame\Intl\Laravel\Factory;
 use Bakame\Intl\Laravel\IntlFormatter;
 use Bakame\Intl\Option\AttributeFormat;
+use Bakame\Intl\Option\CalendarFormat;
+use Bakame\Intl\Option\DateFormat;
 use Bakame\Intl\Option\PaddingPosition;
 use Bakame\Intl\Option\RoundingMode;
+use Bakame\Intl\Option\StyleFormat;
+use Bakame\Intl\Option\TimeFormat;
+use Bakame\Intl\Option\TypeFormat;
 use Illuminate\Support\Facades\App;
-use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
 
 if (! function_exists('country_name')) {
@@ -74,10 +80,14 @@ if (! function_exists('format_currency')) {
         array $attrs = []
     ): string {
         if ($amount instanceof Money) {
-            /** @var IntlMoneyFormatter $intlMoneyFormatter */
-            $intlMoneyFormatter = app()->make('bakame.intl.formatter.factory')->newIntlMoneyFormatter($locale, $attrs);
+            /** @var Factory $factory */
+            $factory = app()->make('bakame.intl.formatter.factory');
 
-            return $intlMoneyFormatter->format($amount);
+            return $factory->newIntlMoneyFormatter($locale, $attrs)->format($amount);
+        }
+
+        if (null === $currency) {
+            throw new LogicException('The currency is missing.');
         }
 
         return IntlFormatter::formatCurrency($amount, $currency, $locale ?? App::currentLocale(), $attrs);
@@ -86,8 +96,10 @@ if (! function_exists('format_currency')) {
 
 if (! function_exists('format_number')) {
     /**
+     * @param key-of<TypeFormat::INTL_MAPPER> $type
      * @param int|float $number
-     * @param array<string, int|float> $attrs
+     * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
+     * @param key-of<StyleFormat::INTL_MAPPER>|null $style
      */
     function format_number(
         $number,
@@ -102,8 +114,13 @@ if (! function_exists('format_number')) {
 
 if (! function_exists('format_datetime')) {
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param key-of<DateFormat::INTL_MAPPER>|null $dateFormat
+     * @param key-of<TimeFormat::INTL_MAPPER>|null $timeFormat
+     * @param key-of<CalendarFormat::INTL_MAPPER>|null $calendar
+     *
+     * @throws FailedFormatting
      */
     function format_datetime(
         $date,
@@ -128,8 +145,10 @@ if (! function_exists('format_datetime')) {
 
 if (! function_exists('format_date')) {
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param key-of<DateFormat::INTL_MAPPER>|null $dateFormat
+     * @param key-of<CalendarFormat::INTL_MAPPER>|null $calendar
      */
     function format_date(
         $date,
@@ -152,8 +171,10 @@ if (! function_exists('format_date')) {
 
 if (! function_exists('format_time')) {
     /**
-     * @param DateTimeInterface|string|null $date A date or null to use the current time
+     * @param DateTimeInterface|string|int|null $date A date or null to use the current time
      * @param DateTimeZone|string|false|null $timezone The target timezone, null to use the default, false to leave unchanged
+     * @param key-of<TimeFormat::INTL_MAPPER>|null $timeFormat
+     * @param key-of<CalendarFormat::INTL_MAPPER>|null $calendar
      */
     function format_time(
         $date,
