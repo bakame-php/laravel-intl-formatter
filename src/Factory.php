@@ -23,8 +23,10 @@ use Money\Formatter\IntlMoneyFormatter;
 
 final class Factory
 {
-    private DateFactory $dateFactory;
-    private NumberFactory $numberFactory;
+    /** @readonly */
+    public DateFactory $dateFactory;
+    /** @readonly */
+    public NumberFactory $numberFactory;
 
     public function __construct(DateFactory $dateFactory, NumberFactory $numberFactory)
     {
@@ -69,14 +71,14 @@ final class Factory
     /**
      * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
      */
-    public function newIntlMoneyFormatter(?string $locale = null, array $attrs = []): IntlMoneyFormatter
+    public function newIntlMoneyFormatter(?string $locale = null, ?string $style = null, array $attrs = []): IntlMoneyFormatter
     {
         $locale = $locale ?? Locale::getDefault();
         $hash = $locale.'|'.json_encode($attrs);
         static $instances = [];
         if (!isset($instances[$hash])) {
             $instances[$hash] = new IntlMoneyFormatter(
-                $this->numberFactory->createNumberFormatter($locale, 'currency', $attrs),
+                $this->numberFactory->createNumberFormatter($locale, $style, $attrs),
                 new ISOCurrencies()
             );
         }

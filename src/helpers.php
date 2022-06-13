@@ -80,7 +80,7 @@ if (! function_exists('format_currency')) {
         array $attrs = []
     ): string {
         if ($amount instanceof Money) {
-            return IntlFactory::newIntlMoneyFormatter($locale, $attrs)->format($amount);
+            return IntlFactory::newIntlMoneyFormatter($locale, 'currency', $attrs)->format($amount);
         }
 
         if (null === $currency) {
@@ -94,7 +94,7 @@ if (! function_exists('format_currency')) {
 if (! function_exists('format_number')) {
     /**
      * @param key-of<TypeFormat::INTL_MAPPER> $type
-     * @param int|float $number
+     * @param int|float|Money $number
      * @param array<key-of<AttributeFormat::INTL_MAPPER>, int|float|key-of<RoundingMode::INTL_MAPPER>|key-of<PaddingPosition::INTL_MAPPER>> $attrs
      * @param key-of<StyleFormat::INTL_MAPPER>|null $style
      */
@@ -105,6 +105,10 @@ if (! function_exists('format_number')) {
         array $attrs = [],
         ?string $style = null
     ): string {
+        if ($number instanceof Money) {
+            return IntlFactory::newIntlMoneyFormatter($locale, $style, $attrs)->format($number);
+        }
+
         return IntlFormatter::formatNumber($number, $locale ?? App::currentLocale(), $type, $attrs, $style);
     }
 }
