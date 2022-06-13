@@ -31,21 +31,20 @@
             "src/helpers.php"
         ],
         "exclude-from-classmap": [
-            "src/**Test.php",
-            "src/Test**"
+            "src/**Test.php"
         ]
     },
     "require": {
         "php": "^7.4 || ^8.0",
+        "ext-intl": "*",
         "ext-json": "*",
         "bakame/intl-formatter": "~0.3.0",
         "illuminate/config": "^8.0 || ^9.0",
-        "illuminate/support": "^8.0 || ^9.0",
-        "moneyphp/money": "^3.0 || ^4.0",
-        "ext-intl": "*"
+        "illuminate/support": "^8.0 || ^9.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",
+        "moneyphp/money": "^3.0 || ^4.0",
         "nunomaduro/larastan": "^1.0.0 || ^2.1",
         "orchestra/testbench": "^6.6.0 || ^7.5",
         "phpstan/phpstan": "^1.7",
@@ -53,6 +52,9 @@
         "phpstan/phpstan-phpunit": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.2",
         "phpunit/phpunit": "^9.5"
+    },
+    "suggest": {
+        "moneyphp/money": "To format currency based on the Money library"
     },
     "scripts": {
         "phpcs:fix" : "php-cs-fixer fix -vvv --using-cache=no --allow-risky=yes --ansi",
