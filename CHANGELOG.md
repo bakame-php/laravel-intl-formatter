@@ -2,11 +2,13 @@
 
 All Notable changes to `bakame/laravel-intl-formatter` will be documented in this file
 
-## [0.2.0] - 2022-06-06
+## [Next] - TBD
 
 ### Added
 
 - Support for `Money` package.
+- Added `IntlFactory` facade.
+- `NumberFactory` and `DateFactory` are now accessible as readonly property of the `Factory` class.
 
 ### Fixed
 
