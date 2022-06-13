@@ -61,11 +61,7 @@ final class Factory
 
     public function newFormatter(DateResolver $dateResolver): Formatter
     {
-        return new Formatter(
-            $this->dateFactory,
-            $this->numberFactory,
-            $dateResolver
-        );
+        return new Formatter($this->dateFactory, $this->numberFactory, $dateResolver);
     }
 
     /**

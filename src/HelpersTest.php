@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Bakame\Intl\Laravel;
 
+use Bakame\Intl\FailedFormatting;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Artisan;
 use Orchestra\Testbench\TestCase as LaravelTestCase;
+use phpDocumentor\Reflection\Types\Void_;
 
 final class HelpersTest extends LaravelTestCase
 {
@@ -220,5 +222,13 @@ Pacific Time (Los Angeles)
 heure du Pacifique nord-américain (Los Angeles)
 EXPECTED;
         self::assertStringContainsString($expected, $content);
+    }
+
+    /** @test */
+    public function it_throw_if_the_currency_is_missing(): void
+    {
+        $this->expectException(FailedFormatting::class);
+
+        format_currency(300, null, 'nl_NL');
     }
 }
