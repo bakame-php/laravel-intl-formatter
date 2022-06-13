@@ -74,7 +74,7 @@ final class Factory
     public function newIntlMoneyFormatter(?string $locale = null, ?string $style = null, array $attrs = []): IntlMoneyFormatter
     {
         $locale = $locale ?? Locale::getDefault();
-        $hash = $locale.'|'.json_encode($attrs);
+        $hash = $locale.'|'.json_encode($style).'|'.json_encode($attrs);
         static $instances = [];
         if (!isset($instances[$hash])) {
             $instances[$hash] = new IntlMoneyFormatter(
