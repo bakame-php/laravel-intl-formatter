@@ -6,10 +6,10 @@ namespace Bakame\Intl\Laravel;
 
 use Illuminate\Support\Facades\Facade;
 
-final class IntlFormatter extends Facade
+final class IntlFactory extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'bakame.intl.formatter';
+        return 'bakame.intl.laravel.factory';
     }
 }

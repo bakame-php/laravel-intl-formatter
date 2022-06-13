@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Bakame\Intl\FailedFormatting;
-use Bakame\Intl\Laravel\Factory;
+use Bakame\Intl\Laravel\IntlFactory;
 use Bakame\Intl\Laravel\IntlFormatter;
 use Bakame\Intl\Option\AttributeFormat;
 use Bakame\Intl\Option\CalendarFormat;
@@ -80,14 +80,11 @@ if (! function_exists('format_currency')) {
         array $attrs = []
     ): string {
         if ($amount instanceof Money) {
-            /** @var Factory $factory */
-            $factory = app()->make('bakame.intl.formatter.factory');
-
-            return $factory->newIntlMoneyFormatter($locale, $attrs)->format($amount);
+            return IntlFactory::newIntlMoneyFormatter($locale, $attrs)->format($amount);
         }
 
         if (null === $currency) {
-            throw new LogicException('The currency is missing.');
+            throw new FailedFormatting('The currency value is missing.');
         }
 
         return IntlFormatter::formatCurrency($amount, $currency, $locale ?? App::currentLocale(), $attrs);
