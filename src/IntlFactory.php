@@ -10,6 +10,6 @@ final class IntlFactory extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'bakame.intl.laravel.factory';
+        return Factory::class;
     }
 }

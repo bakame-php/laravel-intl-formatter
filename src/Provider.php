@@ -29,15 +29,12 @@ final class Provider extends ServiceProvider
 
         $this->mergeConfigFrom(BKM_INTL_FORMATTER.'/config/bakame-intl-formatter.php', 'bakame.intl.laravel.configuration');
 
-        $this->app->singleton('bakame.date.resolver', fn (): DateResolver => DateResolver::fromTimeZone(now()->getTimezone()));
-        $this->app->singleton('bakame.intl.laravel.factory', fn ($app): Factory => Factory::fromAssociative(
+        $this->app->singleton(DateResolver::class, fn (): DateResolver => DateResolver::fromTimeZone(now()->getTimezone()));
+        $this->app->singleton(Factory::class, fn ($app): Factory => Factory::fromAssociative(
             $app->make('config')->get('bakame.intl.laravel.configuration')
         ));
-        $this->app->singleton(
-            'bakame.intl.formatter',
-            fn ($app): Formatter => $app->make('bakame.intl.laravel.factory')->newFormatter(
-                $app->make('bakame.date.resolver')
-            )
+        $this->app->singleton(Formatter::class, fn ($app): Formatter =>
+            $app->make(Factory::class)->newFormatter($app->make(DateResolver::class))
         );
     }
 }
