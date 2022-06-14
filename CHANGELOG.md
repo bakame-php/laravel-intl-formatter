@@ -2,7 +2,7 @@
 
 All Notable changes to `bakame/laravel-intl-formatter` will be documented in this file
 
-## [Next] - TBD
+## [0.3.0] - 2022-06-14
 
 ### Added
 
@@ -13,6 +13,7 @@ All Notable changes to `bakame/laravel-intl-formatter` will be documented in thi
 ### Fixed
 
 - **[BC Break]** Renamed `Factory::newInstance` in `Factory::newFormatter`
+- **[BC Break]** Keys used for container registration are updated.
 
 ### Deprecated
 
@@ -30,6 +31,7 @@ All Notable changes to `bakame/laravel-intl-formatter` will be documented in thi
 
 **Initial release!**
 
-[Next]: https://github.com/bakame-php/laravel-intl-formatter/compare/0.2.0...main
+[Next]: https://github.com/bakame-php/laravel-intl-formatter/compare/0.3.0...main
+[Next]: https://github.com/bakame-php/laravel-intl-formatter/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/bakame-php/laravel-intl-formatter/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/bakame-php/laravel-intl-formatter/releases/tag/0.1.0
